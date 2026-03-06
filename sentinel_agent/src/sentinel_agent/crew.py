@@ -10,7 +10,7 @@ class SentinelAgent:
     """
     Sentinel Code Security Crew
     Loads agents and tasks from YAML configuration files.
-    """
+    """ 
 
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
