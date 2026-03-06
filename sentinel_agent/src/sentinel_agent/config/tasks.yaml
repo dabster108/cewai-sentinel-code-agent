@@ -1,0 +1,99 @@
+analyze_security_task:
+  description: >
+    Analyze the following Python source code files and detect security
+    vulnerabilities including SQL injection, command injection,
+    hardcoded secrets, unsafe deserialization, and dangerous API usage.
+
+    Each file is clearly marked with FILE: and PATH: headers.
+    For each vulnerability found, specify the exact file name and provide
+    the line numbers or relevant code snippet.
+
+    Source code to analyze:
+    {source_code}
+  expected_output: >
+    A structured list of detected security vulnerabilities
+    formatted in markdown. Each issue must specify:
+    - File name
+    - Vulnerability type
+    - Severity level (Critical/High/Medium/Low)
+    - Description of the issue
+    - Affected code snippet
+    - Recommended fix
+  agent: security_agent
+
+analyze_quality_task:
+  description: >
+    Review the following Python source code files for coding best practices violations,
+    anti-patterns, missing type hints, poor structure,
+    unused imports, and performance issues.
+
+    Each file is clearly marked with FILE: and PATH: headers.
+    For each quality issue found, specify the exact file name and provide
+    the line numbers or relevant code snippet.
+
+    Source code to analyze:
+    {source_code}
+  expected_output: >
+    A structured list of code quality issues with recommendations.
+    Each issue must specify:
+    - File name
+    - Issue category
+    - Priority (High/Medium/Low)
+    - Description of the problem
+    - Affected code snippet
+    - Suggested improvement
+  agent: quality_agent
+
+generate_report_task:
+  description: >
+    Combine outputs from the security and quality analysis tasks
+    and generate a final professional report.
+
+    The report should be well-organized by file, making it easy to
+    see which issues belong to which file. Include:
+    - Executive summary with total counts
+    - Issues grouped by file
+    - Severity/priority breakdown
+    - Clear actionable recommendations
+  expected_output: >
+    A complete markdown report summarising all security vulnerabilities
+    and code quality issues found across all analyzed files, with:
+    - Table of contents
+    - Summary statistics (total issues by severity)
+    - Detailed findings organized by file
+    - Actionable recommendations for each issue
+    - Overall code health assessment
+  agent: report_agent
+
+fix_vulnerabilities:
+  description: >
+    The vulnerability report from the previous task is available in your context.
+    It contains a list of vulnerable files and their issues.
+
+    Your job:
+    1. Read the report from your context and identify every vulnerable file.
+    2. For each vulnerable file, produce the COMPLETE fixed version of the file
+       with all vulnerabilities resolved using secure coding practices.
+    3. Fix issues such as SQL injection (use parameterized queries),
+       hardcoded secrets (use os.environ), command injection, etc.
+    4. Do NOT change any code that is not related to the vulnerabilities.
+
+    IMPORTANT: You must output the fixed code for every file using EXACTLY
+    this format for each file (including the #### header and code fence):
+
+    #### filename.py
+    ```python
+    <complete fixed file content here>
+    ```
+
+  expected_output: >
+    For each vulnerable file, output the complete fixed source code using
+    this exact format:
+
+    #### filename.py
+    ```python
+    <complete fixed file content>
+    ```
+
+    After all files, include a brief summary of what was fixed in each file.
+  agent: code_fixer

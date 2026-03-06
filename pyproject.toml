@@ -1,0 +1,27 @@
+[project]
+name = "crewai-sentinel-code-agent"
+version = "0.1.0"
+description = "AI powered security and code analysis agent"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[tools]==1.9.3",
+    "python-dotenv>=1.0.0"
+]
+
+[project.scripts]
+run_crew = "sentinel_agent.main:run"
+sentinel_agent = "sentinel_agent.main:run"
+train = "sentinel_agent.main:train"
+replay = "sentinel_agent.main:replay"
+test = "sentinel_agent.main:test"
+
+[tool.hatch.build]
+packages = ["sentinel_agent/src"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
