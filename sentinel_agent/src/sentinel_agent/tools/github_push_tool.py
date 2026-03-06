@@ -71,23 +71,3 @@ class GitHubPushTool(BaseTool):
             )
 
             # Push to the target branch
-            result = subprocess.run(
-                ["git", "push", "origin", branch],
-                check=True,
-                capture_output=True,
-                text=True,
-                cwd=repo_root,
-            )
-
-            return (
-                f"Successfully committed and pushed to '{repo}' "
-                f"on branch '{branch}' from '{repo_root}'.\n{result.stdout.strip()}"
-            )
-        except subprocess.CalledProcessError as e:
-            stderr = (
-                e.stderr if isinstance(e.stderr, str)
-                else e.stderr.decode("utf-8", errors="replace")
-            )
-            # Sanitize output: never expose the token in error messages
-            stderr = stderr.replace(token, "***")
-            return f"Git operation failed at step '{e.cmd[1]}': {stderr}"
