@@ -2,7 +2,7 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from typing import List
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from crewai.tasks.task_builder.base_task import Task as BaseTask
+
 
 
 @CrewBase
