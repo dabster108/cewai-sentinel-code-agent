@@ -69,8 +69,6 @@ class GitHubPushTool(BaseTool):
                 capture_output=True,
                 cwd=repo_root,
             )
-
-            # Push to the target branch
             result = subprocess.run(
                 ["git", "push", "origin", branch],
                 check=True,
