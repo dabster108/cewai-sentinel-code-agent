@@ -1,15 +1,13 @@
 import subprocess
 
-def ping_host(host):
-    # Use subprocess module to prevent command injection
+def ping_host(host: str) -> None:
+    """Pings a host to check its availability."""
     subprocess.run(["ping", "-c", "1", host])
 
-def list_files(directory):
-    # Use subprocess module to prevent command injection
+def list_files(directory: str) -> None:
+    """Lists the files in a directory."""
     subprocess.run(["ls", directory])
 
 # Example usage:
-host = "example.com"
-directory = "/var/data"
-ping_host(host)
-list_files(directory)
+# ping_host("example_host")
+# list_files("/var/data")

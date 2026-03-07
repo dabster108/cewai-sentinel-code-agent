@@ -1,8 +1,9 @@
 analyze_security_task:
   description: >
     Analyze the following Python source code files and detect security
-    vulnerabilities including SQL injection, command injection,
-    hardcoded secrets, unsafe deserialization, and dangerous API usage.
+    vulnerabilities including SQL injection, command injection, path traversal,
+    unsafe deserialization, weak authentication, hardcoded secrets and API keys,
+    input validation issues, and dangerous API usage.
 
     Each file is clearly marked with FILE: and PATH: headers.
     For each vulnerability found, specify the exact file name and provide
@@ -74,8 +75,10 @@ fix_vulnerabilities:
     1. Read the report from your context and identify every vulnerable file.
     2. For each vulnerable file, produce the COMPLETE fixed version of the file
        with all vulnerabilities resolved using secure coding practices.
-    3. Fix issues such as SQL injection (use parameterized queries),
-       hardcoded secrets (use os.environ), command injection, etc.
+     3. Fix issues such as SQL injection (use parameterized queries),
+       command injection, path traversal, unsafe deserialization, weak authentication,
+       hardcoded secrets and API keys (use os.environ or a secret manager), and
+       other input validation issues.
     4. Do NOT change any code that is not related to the vulnerabilities.
 
     IMPORTANT: You must output the fixed code for every file using EXACTLY
