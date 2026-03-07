@@ -1,43 +1,30 @@
-import re
+import os
 import sqlite3
 
-def get_user_data(user_input: str) -> list:
-    """
-    Retrieves user data from the database based on the provided user input.
+# Store database password securely using environment variable
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
 
-    Args:
-    user_input (str): The user input to search for in the database.
+# Establish a connection to the database
+conn = sqlite3.connect('database.db')
+cursor = conn.cursor()
 
-    Returns:
-    list: A list of user data matching the provided user input.
-    """
-    try:
-        # Validate and sanitize the user input
-        if not re.match("^[a-zA-Z ]+$", user_input):
-            raise ValueError("Invalid input")
+def get_user(username):
+    # Use parameterized query to prevent SQL injection
+    query = "SELECT * FROM users WHERE username = ?"
+    cursor.execute(query, (username,))
+    return cursor.fetchone()
 
-        # Establish a connection to the database
-        conn = sqlite3.connect("database.db")
-        cursor = conn.cursor()
-
-        # Specify exact columns to fetch instead of using *
-        query = "SELECT id, name, email FROM users WHERE name = ?"
-        cursor.execute(query, (user_input,))
-
-        # Fetch the query results
-        results = cursor.fetchall()
-
-        # Return the query results
-        return results
-
-    except sqlite3.Error as e:
-        print(f"Error: {e}")
-    finally:
-        # Close the database connection
-        if 'conn' in locals():
-            conn.close()
+def delete_user(user_id):
+    # Use parameterized query to prevent SQL injection
+    sql = "DELETE FROM users WHERE id = ?"
+    cursor.execute(sql, (user_id,))
+    conn.commit()
 
 # Example usage:
-user_input = "John Doe"
-user_data = get_user_data(user_input)
-print(user_data)
+username = "admin"
+user_id = 1
+get_user(username)
+delete_user(user_id)
+
+# Close the database connection
+conn.close()

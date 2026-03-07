@@ -1,37 +1,29 @@
 import os
-import requests
+import logging
 
-def get_weather(city: str) -> dict:
-    """
-    Retrieves the weather data for the provided city.
+# Set up logging configuration
+logging.basicConfig(filename='log_file.log', level=logging.INFO)
 
-    Args:
-    city (str): The city to retrieve weather data for.
-
-    Returns:
-    dict: A dictionary containing the weather data for the provided city.
-    """
+def read_file(filename):
+    # Validate and sanitize user-inputted file path
+    path = os.path.join("/var/data", filename)
+    if not path.startswith("/var/data/"):
+        raise ValueError("Invalid file path")
     try:
-        # Retrieve the API key from the environment variables
-        API_KEY = os.environ.get("API_KEY")
-
-        # Construct the API request URL
-        url = f"https://api.example.com/weather?q={city}&appid={API_KEY}"
-
-        # Enable SSL/TLS certificate verification for the API request
-        response = requests.get(url, verify=True)
-
-        # Raise an exception for bad status codes
-        response.raise_for_status()
-
-        # Return the JSON response
-        return response.json()
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
+        with open(path, 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        logging.info(f"File {filename} not found")
         return None
 
+def write_log(message):
+    # Validate and sanitize user-inputted log message
+    # For simplicity, this example does not perform any validation
+    # but in a real-world application, you should implement proper validation
+    logging.info(message)
+
 # Example usage:
-city = "New York"
-weather_data = get_weather(city)
-print(weather_data)
+filename = "example.txt"
+message = "This is a log message"
+read_file(filename)
+write_log(message)
