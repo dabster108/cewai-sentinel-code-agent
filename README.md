@@ -28,4 +28,6 @@ Source code files are loaded → Security Agent analyzes for vulnerabilities →
 
 ## Real-World Value
 
+---
+
 Automatically audits and patches insecure Python code on every run, so vulnerabilities are caught and fixed before they reach production.
