@@ -26,18 +26,17 @@ async def scan_file(file: UploadFile = File(...)):
         )
 
     try:
-        # Read file content
+        
         source_code = await file.read()
         source_code = source_code.decode("utf-8")
 
-        # Run the agent
+ 
         result = SentinelAgent().crew().kickoff(inputs={"source_code": source_code})
 
-        # Convert CrewAI result to simple JSON
-        # If it has 'raw', use it; else fallback
+     
         raw_output = getattr(result, "raw", str(result))
 
-        # Try to parse JSON if it's valid, otherwise wrap as string
+     
         try:
             analysis_json = json.loads(raw_output)
         except Exception:
