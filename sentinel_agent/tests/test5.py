@@ -1,16 +1,13 @@
-import json
+import pickle
 
-def load_data(file_path: str) -> object:
-    # Use a safer deserialization method, such as JSON
-    try:
-        with open(file_path, "r") as f:
-            data = json.load(f)
-            return data
-    except FileNotFoundError:
-        return None
+def load_data(file_path):
+    with open(file_path, "rb") as f:
+        data = pickle.load(f)
 
-# Example usage
+    return data
+
+
 if __name__ == "__main__":
-    file_path = "example_data.json"
-    data = load_data(file_path)
+    file = input("Enter file path: ")
+    data = load_data(file)
     print(data)

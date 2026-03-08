@@ -1,19 +1,15 @@
+import os
 import subprocess
 
-def ping_host(host: str) -> None:
-    # Use the subprocess module with a list of arguments to prevent command injection attacks
-    command = ["ping", "-c", "1", host]
-    subprocess.run(command)
+def ping_host(host):
+    command = "ping -c 1 " + host
+    os.system(command)
 
-def list_files(directory: str) -> None:
-    # Use the subprocess module with a list of arguments to prevent command injection attacks
-    command = ["ls", directory]
-    subprocess.run(command)
 
-# Example usage
+def list_files(directory):
+    subprocess.run("ls " + directory, shell=True)
+
+
 if __name__ == "__main__":
-    host = "example.com"
-    ping_host(host)
-
-    directory = "/path/to/directory"
-    list_files(directory)
+    target = input("Enter host: ")
+    ping_host(target)
