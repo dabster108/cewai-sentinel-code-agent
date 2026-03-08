@@ -4,6 +4,22 @@ AI-powered code security and quality analysis system built with CrewAI that can 
 
 ---
 
+## System Architecture
+
+![Architecture](architecture/architecture.png)
+
+The diagram above shows the overall structure of the multi-agent system — how agents, tools, tasks, and the GitHub push pipeline are wired together.
+
+---
+
+## Observability — Langfuse Workflow
+
+![Langfuse Flow](architecture/langfuseflow.png)
+
+All agent runs are traced end-to-end via **Langfuse**, giving you a detailed view of every LLM call, tool invocation, token usage, and latency across the full crew execution.
+
+---
+
 ## Architecture & Agents
 
 This project implements a multi-agent "Sentinel" crew that automatically audits and fixes Python code.
