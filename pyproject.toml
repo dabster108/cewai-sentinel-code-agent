@@ -6,7 +6,8 @@ readme = "README.md"
 requires-python = ">=3.10,<3.14"
 dependencies = [
     "crewai[tools]==1.9.3",
-    "python-dotenv>=1.0.0"
+    "fastapi>=0.135.1",
+    "python-dotenv>=1.0.0",
 ]
 
 [project.scripts]
