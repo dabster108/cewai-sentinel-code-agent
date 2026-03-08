@@ -1,35 +1,34 @@
 import os
 import sqlite3
-from typing import List
 
-DB_PASSWORD = os.environ["DB_PASSWORD"]
-DB_USER = os.environ["DB_USER"]
-DB_HOST = os.environ["DB_HOST"]
-DB_NAME = os.environ["DB_NAME"]
+# Store sensitive credentials securely using environment variables
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
+DB_USER = os.environ.get('DB_USER')
 
-def connect_db() -> sqlite3.Connection:
-    """Establishes a connection to the database."""
-    return sqlite3.connect(DB_NAME)
-
-def get_user(username: str) -> List:
-    """Retrieves a user from the database by username."""
-    conn = connect_db()
-    cursor = conn.cursor()
+def get_user(username: str) -> tuple:
+    # Use parameterized queries to prevent SQL injection
     query = "SELECT * FROM users WHERE username = ?"
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
     cursor.execute(query, (username,))
     user = cursor.fetchone()
     conn.close()
     return user
 
 def delete_user(user_id: int) -> None:
-    """Deletes a user from the database by user ID."""
-    conn = connect_db()
-    cursor = conn.cursor()
+    # Use parameterized queries to prevent SQL injection
     sql = "DELETE FROM users WHERE id = ?"
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
     cursor.execute(sql, (user_id,))
     conn.commit()
     conn.close()
 
-# Example usage:
-# user = get_user("example_username")
-# delete_user(123)
+# Example usage
+if __name__ == "__main__":
+    username = "example_user"
+    user = get_user(username)
+    print(user)
+
+    user_id = 1
+    delete_user(user_id)

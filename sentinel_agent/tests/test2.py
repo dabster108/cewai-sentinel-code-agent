@@ -1,15 +1,21 @@
 import os
 
 def read_file(filename: str) -> str:
-    """Reads the contents of a file."""
-    base_dir = "/var/data"
-    path = os.path.join(base_dir, filename)
-    if os.path.abspath(path).startswith(base_dir):
+    # Validate and sanitize the filename parameter to prevent path traversal attacks
+    base_dir = "/path/to/base/directory"
+    path = os.path.join(base_dir, os.path.basename(filename))
+    if not path.startswith(base_dir):
+        raise ValueError("Invalid file path")
+    
+    try:
         with open(path, "r") as f:
             data = f.read()
-        return data
-    else:
-        raise ValueError("Invalid file path")
+            return data
+    except FileNotFoundError:
+        return None
 
-# Example usage:
-# file_contents = read_file("example_file.txt")
+# Example usage
+if __name__ == "__main__":
+    filename = "example_file.txt"
+    data = read_file(filename)
+    print(data)

@@ -87,10 +87,10 @@ def run():
     try:
         # Check if target is a directory or file
         if os.path.isdir(target):
-            print(f"\n📁 Analyzing all Python files in directory: {target}\n")
+            print(f"\nAnalyzing all Python files in directory: {target}\n")
             source_code = read_directory_files(target)
         else:
-            print(f"\n📄 Analyzing single file: {target}\n")
+            print(f"\n Analyzing single file: {target}\n")
             with open(target, "r") as f:
                 source_code = f"""
 
@@ -102,7 +102,7 @@ PATH: {target}
 """
         
         result = SentinelAgent().crew().kickoff(inputs={"source_code": source_code})
-        print("\n✅ Analysis Completed Successfully")
+        print("\n Analysis Completed Successfully")
 
         # Apply the fixes: try crew final output first, then fall back to report file
         final_output = str(result.raw) if hasattr(result, 'raw') else str(result)
@@ -112,14 +112,14 @@ PATH: {target}
             if report_path.exists():
                 patched = apply_fixes_from_text(report_path.read_text(), target)
             else:
-                print("⚠️  No patched code blocks found — files not modified.")
+                print("  No patched code blocks found — files not modified.")
 
         if patched:
-            print("\n🚀 Pushing fixed files to GitHub...")
+            print("\nPushing fixed files to GitHub...")
             push_result = GitHubPushTool()._run(commit_message="fix: auto security patch")
             print(push_result)
         else:
-            print("⚠️  No files were patched — skipping GitHub push.")
+            print(" No files were patched — skipping GitHub push.")
     except Exception as e:
         raise Exception(f"Error running crew: {e}")
 
@@ -146,10 +146,10 @@ def apply_fixes_from_text(text: str, target: str) -> bool:
         file_path = target_dir / filename
         if file_path.exists():
             file_path.write_text(fixed_code)
-            print(f"✅ Patched and saved: {file_path}")
+            print(f" Patched and saved: {file_path}")
             patched_any = True
         else:
-            print(f"⚠️  File not found, skipping: {file_path}")
+            print(f"File not found, skipping: {file_path}")
 
     return patched_any
 

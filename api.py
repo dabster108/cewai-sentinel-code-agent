@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 sys.path.append(os.path.join(os.path.dirname(__file__), "sentinel_agent", "src"))
 from sentinel_agent.crew import SentinelAgent
+from sentinel_agent.crew import report_agent
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 import uvicorn
@@ -32,6 +33,7 @@ async def scan_file(file: UploadFile = File(...)):
 
  
         result = SentinelAgent().crew().kickoff(inputs={"source_code": source_code})
+
 
      
         raw_output = getattr(result, "raw", str(result))

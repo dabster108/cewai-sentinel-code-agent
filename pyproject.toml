@@ -11,6 +11,8 @@ dependencies = [
     "pydantic>=2.11.10",
     "python-dotenv>=1.0.0",
     "uvicorn>=0.41.0",
+    "matplotlib>=3.10.8",
+    "numpy>=2.2.6",
 ]
 
 [project.scripts]
