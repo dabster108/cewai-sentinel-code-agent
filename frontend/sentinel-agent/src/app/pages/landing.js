@@ -9,51 +9,51 @@ import AnimatedCard from "../components/AnimatedCard";
 const features = [
   {
     icon: "🔍",
-    title: "VULNERABILITY SCAN",
+    title: "Vulnerability Scan",
     description:
       "Deep static analysis using AI agents to detect OWASP Top 10 vulnerabilities, SQL injection, XSS, command injection, and security misconfigurations in your codebase.",
     color: "cyan",
-    tag: "DETECTION ENGINE",
+    tag: "Detection Engine",
   },
   {
     icon: "🤖",
-    title: "CREWAI AGENTS",
+    title: "CrewAI Agents",
     description:
       "Multi-agent orchestration with specialized Scanner, Analyzer, and Reporter agents working in parallel for comprehensive, contextual security coverage.",
     color: "pink",
-    tag: "AI POWERED",
+    tag: "AI Powered",
   },
   {
     icon: "📊",
-    title: "DETAILED REPORTS",
+    title: "Detailed Reports",
     description:
       "Generate professional security reports with severity ratings, exact code locations, and actionable remediation recommendations ready to share with your team.",
     color: "green",
-    tag: "REPORTING",
+    tag: "Reporting",
   },
 ];
 
 const howItWorks = [
   {
     step: "01",
-    title: "SUBMIT CODE",
+    title: "Submit Code",
     desc: "Upload Python files or connect your GitHub repository. Supports single files or entire codebases.",
   },
   {
     step: "02",
-    title: "AI ANALYSIS",
+    title: "AI Analysis",
     desc: "CrewAI agents scan, analyze, and cross-reference against known vulnerability patterns and CVE databases.",
   },
   {
     step: "03",
-    title: "GET REPORT",
+    title: "Get Report",
     desc: "Receive a detailed security report with fixes, severity scores, and line-by-line recommendations.",
   },
 ];
 
 export default function LandingPage() {
   return (
-    <div className="bg-[#020208] min-h-screen">
+    <div className="bg-white min-h-screen">
       <Header />
 
       {/* ── Hero ── */}
@@ -68,26 +68,13 @@ export default function LandingPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div
-            className="font-cyber text-[10px] tracking-[0.4em] mb-3"
-            style={{ color: "rgba(0,245,255,0.7)" }}
-          >
-            CAPABILITIES
+          <div className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">
+            Capabilities
           </div>
-          <h2 className="font-cyber text-3xl md:text-4xl font-bold text-white">
-            WHAT SENTINEL DOES
+          <h2 className="font-bold text-3xl md:text-4xl text-slate-900">
+            What Sentinel Does
           </h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-px w-24 mx-auto mt-5 origin-left"
-            style={{
-              background:
-                "linear-gradient(to right, transparent, #00f5ff, transparent)",
-            }}
-          />
+          <div className="h-px w-16 mx-auto mt-5 bg-indigo-200 rounded-full" />
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -107,11 +94,10 @@ export default function LandingPage() {
 
       {/* ── How it works ── */}
       <section
-        className="py-28 px-4 sm:px-6"
+        className="py-28 px-4 sm:px-6 bg-slate-50"
         style={{
-          background: "rgba(0,245,255,0.01)",
-          borderTop: "1px solid rgba(0,245,255,0.05)",
-          borderBottom: "1px solid rgba(0,245,255,0.05)",
+          borderTop: "1px solid #f1f5f9",
+          borderBottom: "1px solid #f1f5f9",
         }}
       >
         <div className="max-w-5xl mx-auto">
@@ -121,26 +107,13 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div
-              className="font-cyber text-[10px] tracking-[0.4em] mb-3"
-              style={{ color: "rgba(255,0,168,0.7)" }}
-            >
-              WORKFLOW
+            <div className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">
+              Workflow
             </div>
-            <h2 className="font-cyber text-3xl md:text-4xl font-bold text-white">
-              HOW IT WORKS
+            <h2 className="font-bold text-3xl md:text-4xl text-slate-900">
+              How It Works
             </h2>
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="h-px w-24 mx-auto mt-5 origin-left"
-              style={{
-                background:
-                  "linear-gradient(to right, transparent, #ff00a8, transparent)",
-              }}
-            />
+            <div className="h-px w-16 mx-auto mt-5 bg-indigo-200 rounded-full" />
           </motion.div>
 
           <div className="flex flex-col md:flex-row gap-6 items-stretch">
@@ -150,33 +123,27 @@ export default function LandingPage() {
                 className="flex-1 flex flex-col md:flex-row items-center gap-4"
               >
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.85 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.2, duration: 0.5 }}
-                  whileHover={{ scale: 1.03 }}
-                  className="flex-1 text-center p-8 rounded-xl w-full"
+                  transition={{ delay: i * 0.18, duration: 0.45 }}
+                  whileHover={{ y: -3 }}
+                  className="flex-1 text-center p-8 rounded-xl w-full bg-white"
                   style={{
-                    background: "rgba(5,5,16,0.8)",
-                    border: "1px solid rgba(255,0,168,0.15)",
-                    backdropFilter: "blur(10px)",
+                    border: "1px solid #e2e8f0",
+                    boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
                   }}
                 >
                   <div
-                    className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-5 font-cyber text-xl font-bold"
-                    style={{
-                      border: "1px solid rgba(255,0,168,0.35)",
-                      color: "#ff00a8",
-                      background: "rgba(255,0,168,0.05)",
-                      boxShadow: "0 0 20px rgba(255,0,168,0.12)",
-                    }}
+                    className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-5 font-bold text-xl"
+                    style={{ background: "#eef2ff", color: "#6366f1" }}
                   >
                     {s.step}
                   </div>
-                  <h3 className="font-cyber text-xs tracking-widest text-white mb-3">
+                  <h3 className="font-semibold text-slate-900 mb-3">
                     {s.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-slate-500 text-sm leading-relaxed">
                     {s.desc}
                   </p>
                 </motion.div>
@@ -185,9 +152,8 @@ export default function LandingPage() {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.2 + 0.3 }}
-                    className="hidden md:block text-2xl flex-shrink-0"
-                    style={{ color: "rgba(255,0,168,0.3)" }}
+                    transition={{ delay: i * 0.18 + 0.3 }}
+                    className="hidden md:block text-2xl flex-shrink-0 text-slate-300"
                   >
                     →
                   </motion.div>
@@ -206,14 +172,11 @@ export default function LandingPage() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div
-            className="font-cyber text-[10px] tracking-[0.4em] mb-3"
-            style={{ color: "rgba(57,255,20,0.7)" }}
-          >
-            BUILT WITH
+          <div className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">
+            Built With
           </div>
-          <h2 className="font-cyber text-2xl font-bold text-white">
-            ENTERPRISE-GRADE TECHNOLOGY
+          <h2 className="font-bold text-2xl text-slate-900">
+            Enterprise-Grade Technology
           </h2>
         </motion.div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -225,7 +188,7 @@ export default function LandingPage() {
           ].map((tech, i) => (
             <AnimatedCard
               key={tech.name}
-              title={tech.role.toUpperCase()}
+              title={tech.role}
               value={tech.name}
               color={tech.color}
               index={i}
@@ -235,70 +198,53 @@ export default function LandingPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-36 px-4 text-center relative overflow-hidden">
-        <motion.div
-          animate={{ scale: [1, 1.3, 1], opacity: [0.06, 0.14, 0.06] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, rgba(0,245,255,0.1) 0%, transparent 60%)",
-          }}
-        />
+      <section
+        className="py-36 px-4 text-center bg-slate-50"
+        style={{ borderTop: "1px solid #f1f5f9" }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative z-10 max-w-2xl mx-auto"
+          className="max-w-2xl mx-auto"
         >
-          <div
-            className="font-cyber text-[10px] tracking-[0.4em] mb-4"
-            style={{ color: "rgba(0,245,255,0.6)" }}
-          >
-            GET STARTED TODAY
+          <div className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-4">
+            Get Started Today
           </div>
-          <h2
-            className="font-cyber text-4xl md:text-5xl font-black mb-6"
-            style={{
-              color: "#00f5ff",
-              textShadow:
-                "0 0 20px rgba(0,245,255,0.8), 0 0 60px rgba(0,245,255,0.3)",
-            }}
-          >
-            READY TO SECURE YOUR CODE?
+          <h2 className="font-bold text-4xl md:text-5xl text-slate-900 mb-6 leading-tight">
+            Ready to secure
+            <br />
+            your codebase?
           </h2>
-          <p className="text-gray-400 text-lg mb-12 leading-relaxed">
-            Start scanning your codebase today with our AI-powered security
-            platform. Free tier available. No credit card required.
+          <p className="text-slate-500 text-lg mb-12 leading-relaxed">
+            Start scanning today with our AI-powered security platform. Free
+            tier available. No credit card required.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard">
               <motion.button
                 whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 0 50px rgba(0,245,255,0.55)",
+                  scale: 1.03,
+                  boxShadow: "0 8px 28px rgba(99,102,241,0.35)",
                 }}
                 whileTap={{ scale: 0.97 }}
-                className="font-cyber text-xs tracking-widest px-12 py-5 rounded-lg font-bold"
-                style={{
-                  background: "#00f5ff",
-                  color: "#020208",
-                  boxShadow: "0 0 25px rgba(0,245,255,0.4)",
-                }}
+                className="font-semibold text-sm px-10 py-4 rounded-xl text-white"
+                style={{ background: "#6366f1" }}
               >
-                ▷ LAUNCH DASHBOARD
+                Launch Dashboard →
               </motion.button>
             </Link>
             <motion.button
-              whileHover={{ scale: 1.04, borderColor: "#00f5ff" }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className="font-cyber text-xs tracking-widest px-12 py-5 rounded-lg transition-all duration-200"
+              className="font-medium text-sm px-10 py-4 rounded-xl text-slate-700"
               style={{
-                border: "1px solid rgba(0,245,255,0.25)",
-                color: "rgba(0,245,255,0.6)",
+                background: "white",
+                border: "1px solid #e2e8f0",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
               }}
             >
-              VIEW GITHUB
+              View GitHub
             </motion.button>
           </div>
         </motion.div>

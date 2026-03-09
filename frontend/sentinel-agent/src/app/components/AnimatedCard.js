@@ -3,39 +3,34 @@ import { motion } from "framer-motion";
 
 const colorMap = {
   cyan: {
-    text: "#00f5ff",
-    border: "rgba(0,245,255,0.18)",
-    glow: "rgba(0,245,255,0.28)",
-    bg: "rgba(0,245,255,0.04)",
-    highlight: "rgba(0,245,255,0.07)",
+    text: "#3b82f6",
+    border: "#dbeafe",
+    bg: "#eff6ff",
+    badge: { color: "#1d4ed8", bg: "#dbeafe" },
   },
   pink: {
-    text: "#ff00a8",
-    border: "rgba(255,0,168,0.18)",
-    glow: "rgba(255,0,168,0.28)",
-    bg: "rgba(255,0,168,0.04)",
-    highlight: "rgba(255,0,168,0.07)",
+    text: "#ec4899",
+    border: "#fce7f3",
+    bg: "#fdf2f8",
+    badge: { color: "#be185d", bg: "#fce7f3" },
   },
   green: {
-    text: "#39ff14",
-    border: "rgba(57,255,20,0.18)",
-    glow: "rgba(57,255,20,0.28)",
-    bg: "rgba(57,255,20,0.04)",
-    highlight: "rgba(57,255,20,0.07)",
+    text: "#10b981",
+    border: "#d1fae5",
+    bg: "#f0fdf4",
+    badge: { color: "#065f46", bg: "#d1fae5" },
   },
   purple: {
-    text: "#bf00ff",
-    border: "rgba(191,0,255,0.18)",
-    glow: "rgba(191,0,255,0.28)",
-    bg: "rgba(191,0,255,0.04)",
-    highlight: "rgba(191,0,255,0.07)",
+    text: "#8b5cf6",
+    border: "#ede9fe",
+    bg: "#f5f3ff",
+    badge: { color: "#5b21b6", bg: "#ede9fe" },
   },
   orange: {
-    text: "#ff6b35",
-    border: "rgba(255,107,53,0.18)",
-    glow: "rgba(255,107,53,0.28)",
-    bg: "rgba(255,107,53,0.04)",
-    highlight: "rgba(255,107,53,0.07)",
+    text: "#f97316",
+    border: "#fed7aa",
+    bg: "#fff7ed",
+    badge: { color: "#c2410c", bg: "#fed7aa" },
   },
 };
 
@@ -75,101 +70,43 @@ export default function AnimatedCard({
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{
-        scale: 1.025,
-        boxShadow: `0 0 32px ${c.glow}, 0 8px 32px rgba(0,0,0,0.4)`,
-        y: -2,
+        y: -3,
+        boxShadow: "0 12px 32px rgba(0,0,0,0.08)",
       }}
-      className="relative rounded-xl p-6 cursor-pointer overflow-hidden"
+      className="relative rounded-xl p-6 bg-white cursor-pointer"
       style={{
-        background: "rgba(5, 5, 16, 0.85)",
-        border: `1px solid ${c.border}`,
-        backdropFilter: "blur(12px)",
-        transition: "box-shadow 0.3s ease, transform 0.3s ease",
+        border: "1px solid #e2e8f0",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+        transition: "box-shadow 0.25s ease, transform 0.25s ease",
       }}
     >
-      {/* Top-right corner accent lines */}
-      <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden rounded-tr-xl pointer-events-none">
-        <div
-          className="absolute top-0 right-0 w-px h-12"
-          style={{
-            background: `linear-gradient(to bottom, ${c.text}, transparent)`,
-            opacity: 0.6,
-          }}
-        />
-        <div
-          className="absolute top-0 right-0 h-px w-12"
-          style={{
-            background: `linear-gradient(to left, ${c.text}, transparent)`,
-            opacity: 0.6,
-          }}
-        />
+      <div className="flex items-start justify-between mb-3">
+        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          {title}
+        </span>
+        {icon && <span className="text-xl leading-none">{icon}</span>}
       </div>
 
-      {/* Hover inner glow */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 1 }}
-        className="absolute inset-0 rounded-xl pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse at 50% 0%, ${c.highlight} 0%, transparent 65%)`,
-        }}
-      />
+      {value && (
+        <div className="font-bold text-3xl text-slate-900 mb-1">{value}</div>
+      )}
 
-      <div className="relative z-10">
-        {/* Header row */}
-        <div className="flex items-start justify-between mb-3">
-          <span
-            className="font-cyber text-[10px] tracking-[0.2em]"
-            style={{ color: "rgba(148,163,184,0.6)" }}
-          >
-            {title}
-          </span>
-          {icon && (
-            <span
-              className="text-xl leading-none"
-              style={{ filter: `drop-shadow(0 0 6px ${c.text})` }}
-            >
-              {icon}
-            </span>
-          )}
+      {description && (
+        <p className="text-slate-500 text-sm mt-2 leading-relaxed">
+          {description}
+        </p>
+      )}
+
+      {tag && (
+        <div
+          className="mt-3 inline-block text-xs font-semibold px-2.5 py-1 rounded-full"
+          style={{ color: c.badge.color, background: c.badge.bg }}
+        >
+          {tag}
         </div>
+      )}
 
-        {/* Big value */}
-        {value && (
-          <div
-            className="font-cyber text-3xl font-bold mb-1"
-            style={{
-              color: c.text,
-              textShadow: `0 0 20px ${c.glow}`,
-            }}
-          >
-            {value}
-          </div>
-        )}
-
-        {/* Description */}
-        {description && (
-          <p className="text-gray-500 text-sm mt-2 leading-relaxed">
-            {description}
-          </p>
-        )}
-
-        {/* Tag badge */}
-        {tag && (
-          <div
-            className="mt-3 inline-block font-cyber text-[9px] tracking-[0.2em] px-2.5 py-1 rounded"
-            style={{
-              color: c.text,
-              border: `1px solid ${c.border}`,
-              background: c.bg,
-            }}
-          >
-            {tag}
-          </div>
-        )}
-
-        {children}
-      </div>
+      {children}
     </motion.div>
   );
 }
