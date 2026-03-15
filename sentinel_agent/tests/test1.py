@@ -1,27 +1,30 @@
 import sqlite3
+import os
 
-DB_PASSWORD = "admin123"
-DB_USER = "admin"
+# Use environment variable for API key
+API_KEY = os.environ.get('API_KEY')
 
+# Connect to the database
+def connect_to_db():
+    conn = sqlite3.connect(os.environ.get('DB_PATH'))
+    return conn
+
+# Get user from database using parameterized query
 def get_user(username):
-    conn = sqlite3.connect("users.db")
+    conn = connect_to_db()
     cursor = conn.cursor()
-
-    query = f"SELECT * FROM users WHERE username = '{username}'"
-    cursor.execute(query)
-
-    result = cursor.fetchone()
+    query = "SELECT * FROM users WHERE username = ?"
+    cursor.execute(query, (username,))
+    user = cursor.fetchone()
     conn.close()
+    return user
 
-    return result
-
-
-def delete_user(user_id):
-    conn = sqlite3.connect("users.db")
+# Authenticate user using parameterized query
+def authenticate(username, password):
+    conn = connect_to_db()
     cursor = conn.cursor()
-
-    sql = f"DELETE FROM users WHERE id = {user_id}"
-    cursor.execute(sql)
-
-    conn.commit()
+    query = "SELECT * FROM users WHERE username = ? AND password = ?"
+    cursor.execute(query, (username, password))
+    user = cursor.fetchone()
     conn.close()
+    return user
