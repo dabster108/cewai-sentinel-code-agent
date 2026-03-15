@@ -1,31 +1,54 @@
-import sqlite3
 import os
+import sqlite3
+from sqlite3 import Error
 
-# Store sensitive keys and secrets securely using environment variables
-API_KEY = os.environ.get("API_KEY")
+# Store API keys securely using environment variables
+API_KEY = os.environ.get('API_KEY')
 
-# Extract the database connection and query execution into separate functions
-def connect_to_db():
-    conn = sqlite3.connect(os.environ.get("DB_PATH"))
-    return conn
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by the db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except Error as e:
+        print(e)
 
-def execute_query(conn, query, params):
-    cursor = conn.cursor()
-    cursor.execute(query, params)
-    return cursor
+def get_user(conn, username):
+    """ query tasks by priority
+    :param conn: the Connection object
+    :param username
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE username=?", (username,))
+    rows = cur.fetchall()
+    return rows
 
-def get_user(username):
-    conn = connect_to_db()
-    query = "SELECT * FROM users WHERE username = ?"
-    cursor = execute_query(conn, query, (username,))
-    user = cursor.fetchone()
-    conn.close()
-    return user
+def authenticate(conn, username, password):
+    """ query tasks by priority
+    :param conn: the Connection object
+    :param username
+    :param password
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
+    rows = cur.fetchall()
+    return rows
 
-def authenticate(username, password):
-    conn = connect_to_db()
-    query = "SELECT * FROM users WHERE username = ? AND password = ?"
-    cursor = execute_query(conn, query, (username, password))
-    user = cursor.fetchone()
-    conn.close()
-    return user
+# Example usage:
+if __name__ == '__main__':
+    database = "test.db"
+    conn = create_connection(database)
+    with conn:
+        print("Getting user:")
+        user = get_user(conn, "test_user")
+        print(user)
+        print("Authenticating user:")
+        auth = authenticate(conn, "test_user", "test_password")
+        print(auth)
