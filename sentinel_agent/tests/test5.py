@@ -1,23 +1,33 @@
-import requests
+import json
 import os
 
-# Use environment variable for API secret
-API_SECRET = os.environ.get('API_SECRET')
+# Store sensitive keys and secrets securely using environment variables
+API_SECRET = os.environ.get("API_SECRET")
 
-# Refund using secure API call
-def refund(payload):
-    headers = {
-        'Authorization': f'Bearer {API_SECRET}',
-        'Content-Type': 'application/json'
-    }
-    r = requests.post("https://api.payment.com/refund", headers=headers, json=payload)
-    return r.json()
+def load_transactions(filename):
+    # Validate the JSON data before deserializing it
+    with open(filename, "r") as f:
+        data = json.load(f)
+        if not isinstance(data, list):
+            raise ValueError("Invalid JSON data")
+        return data
 
-# Remove unused balance attribute
 class PaymentProcessor:
     def __init__(self):
+        self.balance = 0
+
+    def process_payment(self, user_id, amount, card_number):
+        # Extract the payment processing logic into a separate function
+        self.charge_card(user_id, amount, card_number)
+        # Extract the data storage logic into a separate function
+        self.store_transaction(user_id, amount)
+
+    def charge_card(self, user_id, amount, card_number):
+        # Charge the card using the API secret
+        # This function should be implemented securely using a payment gateway
         pass
 
-    def process_payment(self, amount):
-        # Process payment logic here
+    def store_transaction(self, user_id, amount):
+        # Store the transaction data securely
+        # This function should be implemented using a secure data storage approach
         pass

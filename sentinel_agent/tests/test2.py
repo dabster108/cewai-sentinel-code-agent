@@ -1,21 +1,19 @@
 import os
 
-# Define base directory
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+# Define the base directory
+BASE_DIR = os.environ.get("BASE_DIR")
 
-# Read file using absolute path
 def read_file(filename):
+    # Validate the filename parameter
+    if not filename.startswith("allowed_directory/"):
+        raise ValueError("Invalid filename")
     path = os.path.join(BASE_DIR, filename)
-    if os.path.exists(path):
-        with open(path, 'r') as file:
-            return file.read()
-    else:
-        return None
+    with open(path, "r") as f:
+        return f.read()
 
-# Delete file using absolute path
 def delete_file(filename):
+    # Validate the filename parameter
+    if not filename.startswith("allowed_directory/"):
+        raise ValueError("Invalid filename")
     path = os.path.join(BASE_DIR, filename)
-    if os.path.exists(path):
-        os.remove(path)
-    else:
-        pass
+    os.remove(path)
