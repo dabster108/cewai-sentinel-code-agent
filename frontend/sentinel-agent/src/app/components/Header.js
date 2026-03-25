@@ -32,15 +32,15 @@ export default function Header() {
               <div
                 className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
                 style={{
-                  background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-                  boxShadow: "0 0 14px rgba(37,99,235,0.45)",
+                  background: "linear-gradient(135deg, #f59e0b, #d97706)",
+                  boxShadow: "0 0 16px rgba(245,158,11,0.45)",
                 }}
               >
                 <span className="text-white text-sm font-bold">S</span>
               </div>
               <span
                 className="font-semibold text-base"
-                style={{ color: "#dce9ff" }}
+                style={{ color: "#f2f5ff" }}
               >
                 Sentinel
               </span>
@@ -59,12 +59,12 @@ export default function Header() {
                 <Link
                   href={item.href}
                   className="text-sm font-medium transition-colors duration-150"
-                  style={{ color: "#6882a8" }}
+                  style={{ color: "#8b96b3" }}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#dce9ff")
+                    (e.currentTarget.style.color = "#f2f5ff")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "#6882a8")
+                    (e.currentTarget.style.color = "#8b96b3")
                   }
                 >
                   {item.label}
@@ -79,13 +79,13 @@ export default function Header() {
               <motion.button
                 whileHover={{
                   scale: 1.02,
-                  boxShadow: "0 4px 18px rgba(37,99,235,0.45)",
+                  boxShadow: "0 6px 22px rgba(245,158,11,0.4)",
                 }}
                 whileTap={{ scale: 0.97 }}
                 className="text-sm font-semibold px-4 py-2 rounded-lg text-white transition-all duration-150"
                 style={{
-                  background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-                  boxShadow: "0 0 0 1px rgba(59,130,246,0.3)",
+                  background: "linear-gradient(135deg, #f59e0b, #d97706)",
+                  boxShadow: "0 0 0 1px rgba(245,158,11,0.35)",
                 }}
               >
                 Launch App
@@ -108,17 +108,17 @@ export default function Header() {
             <motion.span
               animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
               className="block h-0.5 w-5 rounded"
-              style={{ background: "#6882a8" }}
+              style={{ background: "#8b96b3" }}
             />
             <motion.span
               animate={isOpen ? { opacity: 0, x: -4 } : { opacity: 1, x: 0 }}
               className="block h-0.5 w-4 rounded"
-              style={{ background: "#6882a8" }}
+              style={{ background: "#8b96b3" }}
             />
             <motion.span
               animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
               className="block h-0.5 w-5 rounded"
-              style={{ background: "#6882a8" }}
+              style={{ background: "#8b96b3" }}
             />
           </button>
         </div>
@@ -145,7 +145,7 @@ export default function Header() {
                   href={item.href}
                   onClick={() => setIsOpen(false)}
                   className="block text-sm px-3 py-2 rounded-lg font-medium transition-colors"
-                  style={{ color: "#6882a8" }}
+                  style={{ color: "#8b96b3" }}
                 >
                   {item.label}
                 </Link>
@@ -158,8 +158,8 @@ export default function Header() {
                 <div
                   className="text-sm font-semibold text-center py-2.5 rounded-lg text-white"
                   style={{
-                    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-                    boxShadow: "0 0 14px rgba(37,99,235,0.35)",
+                    background: "linear-gradient(135deg, #f59e0b, #d97706)",
+                    boxShadow: "0 0 14px rgba(245,158,11,0.35)",
                   }}
                 >
                   Launch App

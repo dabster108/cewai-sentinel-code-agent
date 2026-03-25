@@ -3,34 +3,34 @@ import { motion } from "framer-motion";
 
 const colorMap = {
   cyan: {
-    text: "#60a5fa",
-    glow: "rgba(59,130,246,0.15)",
-    border: "rgba(59,130,246,0.2)",
-    badge: { color: "#93c5fd", bg: "rgba(59,130,246,0.12)" },
+    text: "#22d3ee",
+    glow: "rgba(34,211,238,0.15)",
+    border: "rgba(34,211,238,0.2)",
+    badge: { color: "#67e8f9", bg: "rgba(34,211,238,0.12)" },
   },
   pink: {
-    text: "#f472b6",
-    glow: "rgba(236,72,153,0.12)",
-    border: "rgba(236,72,153,0.2)",
-    badge: { color: "#f9a8d4", bg: "rgba(236,72,153,0.12)" },
+    text: "#fb7185",
+    glow: "rgba(251,113,133,0.14)",
+    border: "rgba(251,113,133,0.22)",
+    badge: { color: "#fecdd3", bg: "rgba(251,113,133,0.12)" },
   },
   green: {
     text: "#34d399",
-    glow: "rgba(16,185,129,0.12)",
-    border: "rgba(16,185,129,0.2)",
-    badge: { color: "#6ee7b7", bg: "rgba(16,185,129,0.12)" },
+    glow: "rgba(16,185,129,0.14)",
+    border: "rgba(16,185,129,0.24)",
+    badge: { color: "#6ee7b7", bg: "rgba(16,185,129,0.14)" },
   },
   purple: {
-    text: "#a78bfa",
-    glow: "rgba(139,92,246,0.12)",
-    border: "rgba(139,92,246,0.2)",
-    badge: { color: "#c4b5fd", bg: "rgba(139,92,246,0.12)" },
+    text: "#f59e0b",
+    glow: "rgba(245,158,11,0.18)",
+    border: "rgba(245,158,11,0.24)",
+    badge: { color: "#fde68a", bg: "rgba(245,158,11,0.14)" },
   },
   orange: {
-    text: "#fb923c",
-    glow: "rgba(249,115,22,0.12)",
-    border: "rgba(249,115,22,0.2)",
-    badge: { color: "#fdba74", bg: "rgba(249,115,22,0.12)" },
+    text: "#f59e0b",
+    glow: "rgba(245,158,11,0.18)",
+    border: "rgba(245,158,11,0.24)",
+    badge: { color: "#fde68a", bg: "rgba(245,158,11,0.14)" },
   },
 };
 
@@ -60,10 +60,10 @@ export default function AnimatedCard({
         y: -4,
         boxShadow: `0 0 0 1px ${c.border}, 0 16px 40px ${c.glow}, 0 4px 16px rgba(0,0,0,0.3)`,
       }}
-      className="relative rounded-xl p-5 cursor-pointer overflow-hidden"
+      className="relative rounded-xl p-5 cursor-pointer overflow-hidden card-glow"
       style={{
-        background: "#0c1526",
-        border: "1px solid rgba(255,255,255,0.07)",
+        background: "var(--bg-card)",
+        border: "1px solid rgba(255,255,255,0.06)",
         boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
         transition: "box-shadow 0.25s ease, transform 0.25s ease",
       }}
@@ -79,7 +79,7 @@ export default function AnimatedCard({
       <div className="flex items-start justify-between mb-3">
         <span
           className="text-[10px] font-semibold uppercase tracking-widest"
-          style={{ color: "#3d5278" }}
+          style={{ color: "#4b5672" }}
         >
           {title}
         </span>
@@ -102,7 +102,7 @@ export default function AnimatedCard({
       {description && (
         <p
           className="text-sm mt-2 leading-relaxed"
-          style={{ color: "#6882a8" }}
+          style={{ color: "#8b96b3" }}
         >
           {description}
         </p>

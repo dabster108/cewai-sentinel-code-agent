@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #04080f;
-  --bg-surface: #0a1120;
-  --bg-elevated: #0f1a2e;
-  --bg-card: #0c1526;
+  --bg: #05070c;
+  --bg-surface: #0b101a;
+  --bg-elevated: #121a2a;
+  --bg-card: #0d1422;
   --border: rgba(255, 255, 255, 0.07);
-  --border-bright: rgba(59, 130, 246, 0.25);
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --primary-glow: rgba(59, 130, 246, 0.18);
-  --text: #dce9ff;
-  --text-muted: #6882a8;
-  --text-subtle: #2e426a;
+  --border-bright: rgba(245, 158, 11, 0.3);
+  --primary: #f59e0b;
+  --primary-dark: #d97706;
+  --primary-glow: rgba(245, 158, 11, 0.2);
+  --accent: #22d3ee;
+  --accent-glow: rgba(34, 211, 238, 0.2);
+  --text: #f2f5ff;
+  --text-muted: #8b96b3;
+  --text-subtle: #39415a;
   --green: #10b981;
   --red: #f87171;
-  --yellow: #fbbf24;
+  --yellow: #f59e0b;
 }
 
 *,
@@ -31,7 +33,7 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-inter), "Inter", system-ui, sans-serif;
+  font-family: var(--font-body), "Space Grotesk", sans-serif;
   overflow-x: hidden;
   margin: 0;
 }
@@ -51,10 +53,13 @@ body {
   background: #2a4060;
 }
 
-.font-cyber {
-  font-family: var(--font-inter), "Inter", system-ui, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+.font-display {
+  font-family: var(--font-display), "Bebas Neue", sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.font-body {
+  font-family: var(--font-body), "Space Grotesk", sans-serif;
 }
 
 /* Dark glassmorphism */
@@ -69,10 +74,93 @@ body {
 .cyber-grid {
   background-image: radial-gradient(
     circle,
-    rgba(59, 130, 246, 0.08) 1px,
+    rgba(245, 158, 11, 0.08) 1px,
     transparent 1px
   );
   background-size: 28px 28px;
+}
+
+.cinema-hero {
+  background:
+    radial-gradient(
+      1200px 600px at 85% -10%,
+      rgba(34, 211, 238, 0.14),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 500px at 10% 0%,
+      rgba(245, 158, 11, 0.16),
+      transparent 55%
+    ),
+    linear-gradient(180deg, #05070c 0%, #0a0f19 55%, #0b101a 100%);
+}
+
+.cinema-surface {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(13, 20, 34, 0.95) 0%,
+      rgba(9, 14, 24, 0.98) 100%
+    ),
+    radial-gradient(
+      600px 320px at 85% 10%,
+      rgba(34, 211, 238, 0.1),
+      transparent 60%
+    );
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cinema-contrast {
+  background:
+    linear-gradient(180deg, rgba(8, 12, 20, 0.98), rgba(10, 16, 26, 0.98)),
+    radial-gradient(
+      700px 360px at 15% 20%,
+      rgba(245, 158, 11, 0.12),
+      transparent 60%
+    );
+}
+
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes aurora-shift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, -2%, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.float-slow {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+.float-slower {
+  animation: float-y 9s ease-in-out infinite;
+}
+
+.aurora {
+  animation: aurora-shift 14s ease-in-out infinite;
 }
 
 /* Glow pulse */
@@ -104,6 +192,6 @@ body {
 /* Blue glow card hover  */
 .card-glow:hover {
   box-shadow:
-    0 0 0 1px rgba(59, 130, 246, 0.2),
-    0 8px 32px rgba(59, 130, 246, 0.08);
+    0 0 0 1px rgba(245, 158, 11, 0.25),
+    0 10px 36px rgba(245, 158, 11, 0.12);
 }

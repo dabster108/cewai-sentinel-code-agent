@@ -216,10 +216,10 @@ function DonutChart({ value = 87 }) {
       </svg>
       <div className="absolute text-center">
         <div
-          className="font-cyber text-xl font-bold"
+          className="font-display text-xl font-bold"
           style={{
-            color: "#60a5fa",
-            textShadow: "0 0 16px rgba(96,165,250,0.7)",
+            color: "#fbbf24",
+            textShadow: "0 0 16px rgba(245,158,11,0.6)",
           }}
         >
           {value}%

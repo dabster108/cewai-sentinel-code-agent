@@ -4,27 +4,34 @@ import Link from "next/link";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden cyber-grid bg-white">
-      {/* Subtle background orbs */}
-      <div
-        className="absolute top-[-8%] right-[-4%] w-[560px] h-[560px] rounded-full pointer-events-none"
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden cinema-hero">
+      <div className="absolute inset-0 cyber-grid opacity-40" />
+      <div className="noise-overlay" />
+
+      {/* Cinematic background glow */}
+      <motion.div
+        className="absolute -top-20 right-[-10%] w-[620px] h-[620px] rounded-full pointer-events-none aurora"
         style={{
           background:
-            "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 65%)",
-          filter: "blur(60px)",
+            "radial-gradient(circle, rgba(34,211,238,0.18) 0%, transparent 65%)",
+          filter: "blur(70px)",
         }}
+        animate={{ y: [0, 18, 0], opacity: [0.7, 0.9, 0.7] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
-      <div
-        className="absolute bottom-[-8%] left-[-4%] w-[480px] h-[480px] rounded-full pointer-events-none"
+      <motion.div
+        className="absolute bottom-[-12%] left-[-6%] w-[520px] h-[520px] rounded-full pointer-events-none aurora"
         style={{
           background:
-            "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 65%)",
-          filter: "blur(60px)",
+            "radial-gradient(circle, rgba(245,158,11,0.2) 0%, transparent 70%)",
+          filter: "blur(80px)",
         }}
+        animate={{ y: [0, -16, 0], opacity: [0.6, 0.85, 0.6] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* Main content */}
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto pt-20">
+      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-28">
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -35,13 +42,13 @@ export default function HeroSection() {
           <div
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold"
             style={{
-              background: "#eef2ff",
-              color: "#6366f1",
-              border: "1px solid #c7d2fe",
+              background: "rgba(245,158,11,0.12)",
+              color: "#fbbf24",
+              border: "1px solid rgba(245,158,11,0.35)",
             }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 inline-block" />
-            AI-Powered Security Platform
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+            Cinematic AI Security Platform
           </div>
         </motion.div>
 
@@ -50,12 +57,12 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.25 }}
-          className="font-bold leading-tight mb-6"
-          style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)", color: "#0f172a" }}
+          className="font-display leading-none mb-6"
+          style={{ fontSize: "clamp(3.2rem, 8vw, 6.4rem)", color: "#f2f5ff" }}
         >
-          AI Security Scanner
+          DETECT THE INVISIBLE
           <br />
-          <span style={{ color: "#6366f1" }}>for Your Codebase</span>
+          <span style={{ color: "#fbbf24" }}>HARDEN EVERY RELEASE</span>
         </motion.h1>
 
         {/* Subtitle */}
@@ -63,7 +70,8 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-slate-500 text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+          style={{ color: "#9aa6c1" }}
         >
           Multi-agent AI system for real-time vulnerability detection. Powered
           by CrewAI — scan, analyze, and harden your code instantly.
@@ -80,11 +88,11 @@ export default function HeroSection() {
             <motion.button
               whileHover={{
                 scale: 1.03,
-                boxShadow: "0 8px 24px rgba(99,102,241,0.35)",
+                boxShadow: "0 10px 28px rgba(245,158,11,0.35)",
               }}
               whileTap={{ scale: 0.97 }}
-              className="font-semibold text-sm px-8 py-3.5 rounded-xl text-white transition-all duration-150"
-              style={{ background: "#6366f1" }}
+              className="font-semibold text-sm px-8 py-3.5 rounded-xl text-black transition-all duration-150"
+              style={{ background: "#fbbf24" }}
             >
               Launch Dashboard →
             </motion.button>
@@ -92,11 +100,12 @@ export default function HeroSection() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
-            className="font-medium text-sm px-8 py-3.5 rounded-xl text-slate-700 transition-all duration-150"
+            className="font-medium text-sm px-8 py-3.5 rounded-xl transition-all duration-150"
             style={{
-              background: "white",
-              border: "1px solid #e2e8f0",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              color: "#e2e8f0",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
             }}
           >
             View Docs
@@ -109,7 +118,7 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.8 }}
           className="flex justify-center gap-12 sm:gap-20 mt-20 pt-10"
-          style={{ borderTop: "1px solid #f1f5f9" }}
+          style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
         >
           {[
             { val: "10K+", label: "Files Scanned" },
@@ -123,10 +132,12 @@ export default function HeroSection() {
               transition={{ delay: 0.85 + i * 0.1 }}
               className="text-center"
             >
-              <div className="font-bold text-2xl sm:text-3xl text-slate-900">
+              <div className="font-bold text-2xl sm:text-3xl text-white">
                 {stat.val}
               </div>
-              <div className="text-sm text-slate-400 mt-1">{stat.label}</div>
+              <div className="text-sm mt-1" style={{ color: "#8792ad" }}>
+                {stat.label}
+              </div>
             </motion.div>
           ))}
         </motion.div>
@@ -139,13 +150,15 @@ export default function HeroSection() {
         transition={{ delay: 1.4 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-xs text-slate-400">Scroll</span>
+        <span className="text-xs" style={{ color: "#7c869f" }}>
+          Scroll
+        </span>
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
           className="w-px h-7"
           style={{
-            background: "linear-gradient(to bottom, #94a3b8, transparent)",
+            background: "linear-gradient(to bottom, #fbbf24, transparent)",
           }}
         />
       </motion.div>

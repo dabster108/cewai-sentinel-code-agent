@@ -53,7 +53,7 @@ const howItWorks = [
 
 export default function LandingPage() {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
       <Header />
 
       {/* ── Hero ── */}
@@ -68,13 +68,22 @@ export default function LandingPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">
+          <div
+            className="text-xs font-semibold uppercase tracking-widest mb-3"
+            style={{ color: "#fbbf24" }}
+          >
             Capabilities
           </div>
-          <h2 className="font-bold text-3xl md:text-4xl text-slate-900">
-            What Sentinel Does
+          <h2
+            className="font-display text-3xl md:text-4xl"
+            style={{ color: "#f2f5ff" }}
+          >
+            What Sentinel Delivers
           </h2>
-          <div className="h-px w-16 mx-auto mt-5 bg-indigo-200 rounded-full" />
+          <div
+            className="h-px w-16 mx-auto mt-5 rounded-full"
+            style={{ background: "rgba(245,158,11,0.6)" }}
+          />
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -93,13 +102,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── How it works ── */}
-      <section
-        className="py-28 px-4 sm:px-6 bg-slate-50"
-        style={{
-          borderTop: "1px solid #f1f5f9",
-          borderBottom: "1px solid #f1f5f9",
-        }}
-      >
+      <section className="py-28 px-4 sm:px-6 cinema-surface">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -107,13 +110,22 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">
+            <div
+              className="text-xs font-semibold uppercase tracking-widest mb-3"
+              style={{ color: "#fbbf24" }}
+            >
               Workflow
             </div>
-            <h2 className="font-bold text-3xl md:text-4xl text-slate-900">
+            <h2
+              className="font-display text-3xl md:text-4xl"
+              style={{ color: "#f2f5ff" }}
+            >
               How It Works
             </h2>
-            <div className="h-px w-16 mx-auto mt-5 bg-indigo-200 rounded-full" />
+            <div
+              className="h-px w-16 mx-auto mt-5 rounded-full"
+              style={{ background: "rgba(245,158,11,0.6)" }}
+            />
           </motion.div>
 
           <div className="flex flex-col md:flex-row gap-6 items-stretch">
@@ -128,22 +140,32 @@ export default function LandingPage() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.18, duration: 0.45 }}
                   whileHover={{ y: -3 }}
-                  className="flex-1 text-center p-8 rounded-xl w-full bg-white"
+                  className="flex-1 text-center p-8 rounded-xl w-full"
                   style={{
-                    border: "1px solid #e2e8f0",
-                    boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+                    background: "rgba(8,12,20,0.75)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
                   }}
                 >
                   <div
                     className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-5 font-bold text-xl"
-                    style={{ background: "#eef2ff", color: "#6366f1" }}
+                    style={{
+                      background: "rgba(245,158,11,0.18)",
+                      color: "#fbbf24",
+                    }}
                   >
                     {s.step}
                   </div>
-                  <h3 className="font-semibold text-slate-900 mb-3">
+                  <h3
+                    className="font-semibold mb-3"
+                    style={{ color: "#f2f5ff" }}
+                  >
                     {s.title}
                   </h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: "#9aa6c1" }}
+                  >
                     {s.desc}
                   </p>
                 </motion.div>
@@ -153,7 +175,8 @@ export default function LandingPage() {
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.18 + 0.3 }}
-                    className="hidden md:block text-2xl flex-shrink-0 text-slate-300"
+                    className="hidden md:block text-2xl flex-shrink-0"
+                    style={{ color: "#4b5672" }}
                   >
                     →
                   </motion.div>
@@ -172,10 +195,13 @@ export default function LandingPage() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-3">
+          <div
+            className="text-xs font-semibold uppercase tracking-widest mb-3"
+            style={{ color: "#fbbf24" }}
+          >
             Built With
           </div>
-          <h2 className="font-bold text-2xl text-slate-900">
+          <h2 className="font-display text-2xl" style={{ color: "#f2f5ff" }}>
             Enterprise-Grade Technology
           </h2>
         </motion.div>
@@ -198,25 +224,31 @@ export default function LandingPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section
-        className="py-36 px-4 text-center bg-slate-50"
-        style={{ borderTop: "1px solid #f1f5f9" }}
-      >
+      <section className="py-36 px-4 text-center cinema-contrast">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="max-w-2xl mx-auto"
         >
-          <div className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mb-4">
+          <div
+            className="text-xs font-semibold uppercase tracking-widest mb-4"
+            style={{ color: "#fbbf24" }}
+          >
             Get Started Today
           </div>
-          <h2 className="font-bold text-4xl md:text-5xl text-slate-900 mb-6 leading-tight">
+          <h2
+            className="font-display text-4xl md:text-5xl mb-6 leading-tight"
+            style={{ color: "#f2f5ff" }}
+          >
             Ready to secure
             <br />
-            your codebase?
+            your release pipeline?
           </h2>
-          <p className="text-slate-500 text-lg mb-12 leading-relaxed">
+          <p
+            className="text-lg mb-12 leading-relaxed"
+            style={{ color: "#9aa6c1" }}
+          >
             Start scanning today with our AI-powered security platform. Free
             tier available. No credit card required.
           </p>
@@ -225,11 +257,11 @@ export default function LandingPage() {
               <motion.button
                 whileHover={{
                   scale: 1.03,
-                  boxShadow: "0 8px 28px rgba(99,102,241,0.35)",
+                  boxShadow: "0 10px 28px rgba(245,158,11,0.35)",
                 }}
                 whileTap={{ scale: 0.97 }}
-                className="font-semibold text-sm px-10 py-4 rounded-xl text-white"
-                style={{ background: "#6366f1" }}
+                className="font-semibold text-sm px-10 py-4 rounded-xl text-black"
+                style={{ background: "#fbbf24" }}
               >
                 Launch Dashboard →
               </motion.button>
@@ -237,11 +269,12 @@ export default function LandingPage() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className="font-medium text-sm px-10 py-4 rounded-xl text-slate-700"
+              className="font-medium text-sm px-10 py-4 rounded-xl"
               style={{
-                background: "white",
-                border: "1px solid #e2e8f0",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "#e2e8f0",
+                boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
               }}
             >
               View GitHub
