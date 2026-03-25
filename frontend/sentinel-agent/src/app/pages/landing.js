@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -52,6 +53,59 @@ const howItWorks = [
 ];
 
 export default function LandingPage() {
+  const apiBase = useMemo(
+    () => process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000",
+    [],
+  );
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [results, setResults] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onFilesChange = (event) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length > 10) {
+      setErrorMessage("Max 10 files allowed.");
+      setSelectedFiles(files.slice(0, 10));
+      return;
+    }
+    setErrorMessage("");
+    setSelectedFiles(files);
+  };
+
+  const onUpload = async () => {
+    if (selectedFiles.length === 0) {
+      setErrorMessage("Select at least one .py file.");
+      return;
+    }
+
+    setIsUploading(true);
+    setErrorMessage("");
+    setResults([]);
+
+    try {
+      const formData = new FormData();
+      selectedFiles.forEach((file) => formData.append("files", file));
+
+      const response = await fetch(`${apiBase}/scan-files`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        setErrorMessage(data?.message || "Upload failed.");
+        return;
+      }
+
+      setResults(data?.results || []);
+    } catch (error) {
+      setErrorMessage("Upload failed. Check your API server.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen" style={{ background: "var(--bg)" }}>
       <Header />
@@ -184,6 +238,124 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Multi-file upload ── */}
+      <section className="py-24 px-4 sm:px-6 max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <div
+            className="text-xs font-semibold uppercase tracking-widest mb-3"
+            style={{ color: "#fbbf24" }}
+          >
+            Multi-File Scan
+          </div>
+          <h2
+            className="font-display text-3xl md:text-4xl"
+            style={{ color: "#f2f5ff" }}
+          >
+            Upload multiple files in one pass
+          </h2>
+          <p className="text-sm mt-4" style={{ color: "#9aa6c1" }}>
+            Select up to 10 Python files. Results stream back per file.
+          </p>
+        </motion.div>
+
+        <div
+          className="rounded-2xl p-6 md:p-8"
+          style={{
+            background: "rgba(8,12,20,0.75)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            boxShadow: "0 16px 40px rgba(0,0,0,0.35)",
+          }}
+        >
+          <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+            <div>
+              <div
+                className="text-sm font-semibold"
+                style={{ color: "#f2f5ff" }}
+              >
+                Upload Python files
+              </div>
+              <div className="text-xs mt-2" style={{ color: "#6b748d" }}>
+                {selectedFiles.length} selected
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <label
+                className="text-sm font-semibold px-4 py-2 rounded-lg cursor-pointer text-black"
+                style={{ background: "#fbbf24" }}
+              >
+                Choose files
+                <input
+                  type="file"
+                  accept=".py"
+                  multiple
+                  className="hidden"
+                  onChange={onFilesChange}
+                />
+              </label>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={onUpload}
+                disabled={isUploading}
+                className="text-sm font-semibold px-5 py-2 rounded-lg"
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  color: "#e2e8f0",
+                  opacity: isUploading ? 0.7 : 1,
+                }}
+              >
+                {isUploading ? "Scanning..." : "Scan now"}
+              </motion.button>
+            </div>
+          </div>
+
+          {errorMessage && (
+            <div className="text-xs mt-4" style={{ color: "#f87171" }}>
+              {errorMessage}
+            </div>
+          )}
+
+          {results.length > 0 && (
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3">
+              {results.map((result) => (
+                <div
+                  key={result.filename}
+                  className="rounded-lg px-4 py-3"
+                  style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.05)",
+                  }}
+                >
+                  <div
+                    className="text-sm font-semibold"
+                    style={{ color: "#f2f5ff" }}
+                  >
+                    {result.filename}
+                  </div>
+                  <div
+                    className="text-xs mt-2"
+                    style={{
+                      color:
+                        result.status === "success" ? "#34d399" : "#f87171",
+                    }}
+                  >
+                    {result.status === "success"
+                      ? "Scanned successfully"
+                      : result.error || "Scan failed"}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
