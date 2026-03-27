@@ -1,17 +1,16 @@
-import { Bebas_Neue, Space_Grotesk } from "next/font/google";
+import { DM_Serif_Display, Inter } from "next/font/google";
 import "./globals.css";
 
-const display = Bebas_Neue({
+const display = DM_Serif_Display({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["400"],
   display: "swap",
 });
 
-const body = Space_Grotesk({
+const body = Inter({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 

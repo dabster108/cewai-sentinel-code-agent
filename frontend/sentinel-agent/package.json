@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "framer-motion": "^12.35.1",
+    "lucide-react": "^1.7.0",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "recharts": "^3.8.1"
   },
   "devDependencies": {
     "@next/swc-darwin-arm64": "^16.2.1",

@@ -124,19 +124,19 @@ export default function LandingPage() {
         >
           <div
             className="text-xs font-semibold uppercase tracking-widest mb-3"
-            style={{ color: "#fbbf24" }}
+            style={{ color: "var(--primary)" }}
           >
             Capabilities
           </div>
           <h2
             className="font-display text-3xl md:text-4xl"
-            style={{ color: "#f2f5ff" }}
+            style={{ color: "var(--text)" }}
           >
             What Sentinel Delivers
           </h2>
           <div
             className="h-px w-16 mx-auto mt-5 rounded-full"
-            style={{ background: "rgba(245,158,11,0.6)" }}
+            style={{ background: "var(--border-bright)" }}
           />
         </motion.div>
 
@@ -166,19 +166,19 @@ export default function LandingPage() {
           >
             <div
               className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "#fbbf24" }}
+              style={{ color: "var(--primary)" }}
             >
               Workflow
             </div>
             <h2
               className="font-display text-3xl md:text-4xl"
-              style={{ color: "#f2f5ff" }}
+              style={{ color: "var(--text)" }}
             >
               How It Works
             </h2>
             <div
               className="h-px w-16 mx-auto mt-5 rounded-full"
-              style={{ background: "rgba(245,158,11,0.6)" }}
+              style={{ background: "var(--border-bright)" }}
             />
           </motion.div>
 
@@ -196,29 +196,29 @@ export default function LandingPage() {
                   whileHover={{ y: -3 }}
                   className="flex-1 text-center p-8 rounded-xl w-full"
                   style={{
-                    background: "rgba(8,12,20,0.75)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border)",
+                    boxShadow: "0 10px 30px rgba(15,40,80,0.12)",
                   }}
                 >
                   <div
                     className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-5 font-bold text-xl"
                     style={{
-                      background: "rgba(245,158,11,0.18)",
-                      color: "#fbbf24",
+                      background: "rgba(29,78,216,0.12)",
+                      color: "var(--primary)",
                     }}
                   >
                     {s.step}
                   </div>
                   <h3
                     className="font-semibold mb-3"
-                    style={{ color: "#f2f5ff" }}
+                    style={{ color: "var(--text)" }}
                   >
                     {s.title}
                   </h3>
                   <p
                     className="text-sm leading-relaxed"
-                    style={{ color: "#9aa6c1" }}
+                    style={{ color: "var(--text-muted)" }}
                   >
                     {s.desc}
                   </p>
@@ -230,7 +230,7 @@ export default function LandingPage() {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.18 + 0.3 }}
                     className="hidden md:block text-2xl flex-shrink-0"
-                    style={{ color: "#4b5672" }}
+                    style={{ color: "var(--text-subtle)" }}
                   >
                     →
                   </motion.div>
@@ -251,17 +251,17 @@ export default function LandingPage() {
         >
           <div
             className="text-xs font-semibold uppercase tracking-widest mb-3"
-            style={{ color: "#fbbf24" }}
+            style={{ color: "var(--primary)" }}
           >
             Multi-File Scan
           </div>
           <h2
             className="font-display text-3xl md:text-4xl"
-            style={{ color: "#f2f5ff" }}
+            style={{ color: "var(--text)" }}
           >
             Upload multiple files in one pass
           </h2>
-          <p className="text-sm mt-4" style={{ color: "#9aa6c1" }}>
+          <p className="text-sm mt-4" style={{ color: "var(--text-muted)" }}>
             Select up to 10 Python files. Results stream back per file.
           </p>
         </motion.div>
@@ -269,27 +269,30 @@ export default function LandingPage() {
         <div
           className="rounded-2xl p-6 md:p-8"
           style={{
-            background: "rgba(8,12,20,0.75)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 16px 40px rgba(0,0,0,0.35)",
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            boxShadow: "0 16px 40px rgba(15,40,80,0.14)",
           }}
         >
           <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
             <div>
               <div
                 className="text-sm font-semibold"
-                style={{ color: "#f2f5ff" }}
+                style={{ color: "var(--text)" }}
               >
                 Upload Python files
               </div>
-              <div className="text-xs mt-2" style={{ color: "#6b748d" }}>
+              <div
+                className="text-xs mt-2"
+                style={{ color: "var(--text-subtle)" }}
+              >
                 {selectedFiles.length} selected
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <label
-                className="text-sm font-semibold px-4 py-2 rounded-lg cursor-pointer text-black"
-                style={{ background: "#fbbf24" }}
+                className="text-sm font-semibold px-4 py-2 rounded-lg cursor-pointer text-white"
+                style={{ background: "var(--primary)" }}
               >
                 Choose files
                 <input
@@ -307,9 +310,9 @@ export default function LandingPage() {
                 disabled={isUploading}
                 className="text-sm font-semibold px-5 py-2 rounded-lg"
                 style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  color: "#e2e8f0",
+                  background: "rgba(29,78,216,0.1)",
+                  border: "1px solid rgba(29,78,216,0.2)",
+                  color: "var(--primary-dark)",
                   opacity: isUploading ? 0.7 : 1,
                 }}
               >
@@ -319,7 +322,7 @@ export default function LandingPage() {
           </div>
 
           {errorMessage && (
-            <div className="text-xs mt-4" style={{ color: "#f87171" }}>
+            <div className="text-xs mt-4" style={{ color: "var(--red)" }}>
               {errorMessage}
             </div>
           )}
@@ -331,13 +334,13 @@ export default function LandingPage() {
                   key={result.filename}
                   className="rounded-lg px-4 py-3"
                   style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.05)",
+                    background: "rgba(29,78,216,0.04)",
+                    border: "1px solid rgba(29,78,216,0.12)",
                   }}
                 >
                   <div
                     className="text-sm font-semibold"
-                    style={{ color: "#f2f5ff" }}
+                    style={{ color: "var(--text)" }}
                   >
                     {result.filename}
                   </div>
@@ -369,11 +372,14 @@ export default function LandingPage() {
         >
           <div
             className="text-xs font-semibold uppercase tracking-widest mb-3"
-            style={{ color: "#fbbf24" }}
+            style={{ color: "var(--primary)" }}
           >
             Built With
           </div>
-          <h2 className="font-display text-2xl" style={{ color: "#f2f5ff" }}>
+          <h2
+            className="font-display text-2xl"
+            style={{ color: "var(--text)" }}
+          >
             Enterprise-Grade Technology
           </h2>
         </motion.div>
@@ -405,13 +411,13 @@ export default function LandingPage() {
         >
           <div
             className="text-xs font-semibold uppercase tracking-widest mb-4"
-            style={{ color: "#fbbf24" }}
+            style={{ color: "var(--primary)" }}
           >
             Get Started Today
           </div>
           <h2
             className="font-display text-4xl md:text-5xl mb-6 leading-tight"
-            style={{ color: "#f2f5ff" }}
+            style={{ color: "var(--text)" }}
           >
             Ready to secure
             <br />
@@ -419,7 +425,7 @@ export default function LandingPage() {
           </h2>
           <p
             className="text-lg mb-12 leading-relaxed"
-            style={{ color: "#9aa6c1" }}
+            style={{ color: "var(--text-muted)" }}
           >
             Start scanning today with our AI-powered security platform. Free
             tier available. No credit card required.
@@ -429,11 +435,11 @@ export default function LandingPage() {
               <motion.button
                 whileHover={{
                   scale: 1.03,
-                  boxShadow: "0 10px 28px rgba(245,158,11,0.35)",
+                  boxShadow: "0 12px 28px rgba(29,78,216,0.35)",
                 }}
                 whileTap={{ scale: 0.97 }}
-                className="font-semibold text-sm px-10 py-4 rounded-xl text-black"
-                style={{ background: "#fbbf24" }}
+                className="font-semibold text-sm px-10 py-4 rounded-xl text-white"
+                style={{ background: "var(--primary)" }}
               >
                 Launch Dashboard →
               </motion.button>
@@ -443,10 +449,10 @@ export default function LandingPage() {
               whileTap={{ scale: 0.97 }}
               className="font-medium text-sm px-10 py-4 rounded-xl"
               style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                color: "#e2e8f0",
-                boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+                background: "rgba(255,255,255,0.7)",
+                border: "1px solid var(--border)",
+                color: "var(--text)",
+                boxShadow: "0 6px 18px rgba(15,40,80,0.12)",
               }}
             >
               View GitHub
