@@ -13,7 +13,7 @@ export default function HeroSection() {
         className="absolute -top-20 right-[-10%] w-[620px] h-[620px] rounded-full pointer-events-none aurora"
         style={{
           background:
-            "radial-gradient(circle, rgba(34,211,238,0.18) 0%, transparent 65%)",
+            "radial-gradient(circle, rgba(56,189,248,0.18) 0%, transparent 65%)",
           filter: "blur(70px)",
         }}
         animate={{ y: [0, 18, 0], opacity: [0.7, 0.9, 0.7] }}
@@ -23,7 +23,7 @@ export default function HeroSection() {
         className="absolute bottom-[-12%] left-[-6%] w-[520px] h-[520px] rounded-full pointer-events-none aurora"
         style={{
           background:
-            "radial-gradient(circle, rgba(245,158,11,0.2) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(29,78,216,0.2) 0%, transparent 70%)",
           filter: "blur(80px)",
         }}
         animate={{ y: [0, -16, 0], opacity: [0.6, 0.85, 0.6] }}
@@ -42,12 +42,15 @@ export default function HeroSection() {
           <div
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold"
             style={{
-              background: "rgba(245,158,11,0.12)",
-              color: "#fbbf24",
-              border: "1px solid rgba(245,158,11,0.35)",
+              background: "rgba(29,78,216,0.12)",
+              color: "var(--primary)",
+              border: "1px solid rgba(29,78,216,0.35)",
             }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+            <span
+              className="w-1.5 h-1.5 rounded-full inline-block"
+              style={{ background: "var(--primary)" }}
+            />
             Cinematic AI Security Platform
           </div>
         </motion.div>
@@ -58,11 +61,14 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.25 }}
           className="font-display leading-none mb-6"
-          style={{ fontSize: "clamp(3.2rem, 8vw, 6.4rem)", color: "#f2f5ff" }}
+          style={{
+            fontSize: "clamp(3.2rem, 8vw, 6.4rem)",
+            color: "var(--text)",
+          }}
         >
           DETECT THE INVISIBLE
           <br />
-          <span style={{ color: "#fbbf24" }}>HARDEN EVERY RELEASE</span>
+          <span style={{ color: "var(--primary)" }}>HARDEN EVERY RELEASE</span>
         </motion.h1>
 
         {/* Subtitle */}
@@ -71,7 +77,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
-          style={{ color: "#9aa6c1" }}
+          style={{ color: "var(--text-muted)" }}
         >
           Multi-agent AI system for real-time vulnerability detection. Powered
           by CrewAI — scan, analyze, and harden your code instantly.
@@ -88,11 +94,11 @@ export default function HeroSection() {
             <motion.button
               whileHover={{
                 scale: 1.03,
-                boxShadow: "0 10px 28px rgba(245,158,11,0.35)",
+                boxShadow: "0 10px 28px rgba(29,78,216,0.35)",
               }}
               whileTap={{ scale: 0.97 }}
-              className="font-semibold text-sm px-8 py-3.5 rounded-xl text-black transition-all duration-150"
-              style={{ background: "#fbbf24" }}
+              className="font-semibold text-sm px-8 py-3.5 rounded-xl text-white transition-all duration-150"
+              style={{ background: "var(--primary)" }}
             >
               Launch Dashboard →
             </motion.button>
@@ -102,10 +108,10 @@ export default function HeroSection() {
             whileTap={{ scale: 0.97 }}
             className="font-medium text-sm px-8 py-3.5 rounded-xl transition-all duration-150"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              color: "#e2e8f0",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+              background: "rgba(255,255,255,0.7)",
+              border: "1px solid var(--border)",
+              color: "var(--text)",
+              boxShadow: "0 4px 12px rgba(15,40,80,0.12)",
             }}
           >
             View Docs
@@ -118,7 +124,7 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.8 }}
           className="flex justify-center gap-12 sm:gap-20 mt-20 pt-10"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+          style={{ borderTop: "1px solid var(--border)" }}
         >
           {[
             { val: "10K+", label: "Files Scanned" },
@@ -132,10 +138,16 @@ export default function HeroSection() {
               transition={{ delay: 0.85 + i * 0.1 }}
               className="text-center"
             >
-              <div className="font-bold text-2xl sm:text-3xl text-white">
+              <div
+                className="font-bold text-2xl sm:text-3xl"
+                style={{ color: "var(--text)" }}
+              >
                 {stat.val}
               </div>
-              <div className="text-sm mt-1" style={{ color: "#8792ad" }}>
+              <div
+                className="text-sm mt-1"
+                style={{ color: "var(--text-subtle)" }}
+              >
                 {stat.label}
               </div>
             </motion.div>
@@ -150,7 +162,7 @@ export default function HeroSection() {
         transition={{ delay: 1.4 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-xs" style={{ color: "#7c869f" }}>
+        <span className="text-xs" style={{ color: "var(--text-subtle)" }}>
           Scroll
         </span>
         <motion.div
@@ -158,7 +170,8 @@ export default function HeroSection() {
           transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
           className="w-px h-7"
           style={{
-            background: "linear-gradient(to bottom, #fbbf24, transparent)",
+            background:
+              "linear-gradient(to bottom, var(--primary), transparent)",
           }}
         />
       </motion.div>

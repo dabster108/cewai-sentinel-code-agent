@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import AnimatedCard from "../components/AnimatedCard";
 
 /* ─── Sample data ─────────────────────────────────────────── */
 const recentScans = [
@@ -74,25 +73,25 @@ const agentLogs = [
     agent: "Scanner",
     msg: "Completed analysis of auth.py — 3 HIGH issues found",
     time: "02:14",
-    color: "#ec4899",
+    color: "#a855f7",
   },
   {
     agent: "Analyzer",
     msg: "Cross-referenced database.py against OWASP Top 10",
     time: "02:10",
-    color: "#3b82f6",
+    color: "#06b6d4",
   },
   {
     agent: "Reporter",
     msg: "Generated summary report for last 24h session",
     time: "01:58",
-    color: "#22c55e",
+    color: "#10b981",
   },
   {
     agent: "Scanner",
     msg: "Scanning models.py — no vulnerabilities detected",
     time: "01:45",
-    color: "#22c55e",
+    color: "#10b981",
   },
 ];
 
@@ -101,25 +100,25 @@ const agentLogs = [
 function StatusBadge({ status }) {
   const styles = {
     CLEAN: {
-      color: "#34d399",
-      border: "rgba(16,185,129,0.25)",
-      bg: "rgba(16,185,129,0.08)",
+      color: "#10b981",
+      border: "rgba(16, 185, 129, 0.25)",
+      bg: "rgba(16, 185, 129, 0.08)",
     },
     CRITICAL: {
-      color: "#f87171",
-      border: "rgba(248,113,113,0.25)",
-      bg: "rgba(248,113,113,0.08)",
+      color: "#f43f5e",
+      border: "rgba(244, 63, 94, 0.25)",
+      bg: "rgba(244, 63, 94, 0.08)",
     },
     FLAGGED: {
-      color: "#fbbf24",
-      border: "rgba(251,191,36,0.25)",
-      bg: "rgba(251,191,36,0.08)",
+      color: "#f59e0b",
+      border: "rgba(245, 158, 11, 0.25)",
+      bg: "rgba(245, 158, 11, 0.08)",
     },
   };
   const s = styles[status] || styles.FLAGGED;
   return (
     <span
-      className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider"
+      className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
       style={{
         color: s.color,
         border: `1px solid ${s.border}`,
@@ -134,43 +133,38 @@ function StatusBadge({ status }) {
 function BarChart({ data }) {
   const max = Math.max(...data.map((d) => d.scans));
   return (
-    <div className="flex items-end gap-2 h-28">
+    <div className="flex items-end justify-between gap-1.5 h-32 px-2">
       {data.map((d, i) => (
         <div
           key={d.day}
-          className="flex-1 flex flex-col items-center gap-1 group"
+          className="flex-1 flex flex-col items-center gap-1.5 group"
         >
-          <div
-            className="relative w-full flex items-end"
-            style={{ height: "100px" }}
-          >
-            <div
-              className="w-full flex flex-col justify-end"
-              style={{ height: "100%" }}
+          <div className="relative w-full flex items-end h-24">
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: `${(d.scans / max) * 100}%` }}
+              transition={{
+                duration: 0.9,
+                delay: i * 0.08,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="w-full rounded-t cursor-pointer relative overflow-hidden group/bar hover:opacity-80 transition-opacity"
+              style={{
+                background:
+                  "linear-gradient(180deg, #a855f7 0%, rgba(168, 85, 247, 0.4) 100%)",
+                boxShadow: "0 0 16px rgba(168, 85, 247, 0.3)",
+                minHeight: "4px",
+              }}
             >
-              <motion.div
-                initial={{ height: 0 }}
-                animate={{ height: `${(d.scans / max) * 100}%` }}
-                transition={{
-                  duration: 0.9,
-                  delay: i * 0.08,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="w-full rounded-t-sm cursor-pointer relative overflow-hidden group"
-                style={{
-                  background:
-                    "linear-gradient(to top, #2563eb 0%, rgba(59,130,246,0.3) 100%)",
-                  boxShadow: "0 0 12px rgba(37,99,235,0.25)",
-                }}
-              >
-                {/* Hover tooltip */}
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-blue-400 text-xs font-semibold">
-                  {d.scans}
-                </div>
-              </motion.div>
-            </div>
+              <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-all duration-200 whitespace-nowrap text-purple-400 text-xs font-semibold pointer-events-none">
+                {d.scans}
+              </div>
+            </motion.div>
           </div>
-          <span className="text-xs" style={{ color: "#3d5278" }}>
+          <span
+            className="text-xs font-medium"
+            style={{ color: "var(--text-muted)" }}
+          >
             {d.day}
           </span>
         </div>
@@ -185,48 +179,48 @@ function DonutChart({ value = 87 }) {
   const offset = circ - (value / 100) * circ;
   return (
     <div className="relative inline-flex items-center justify-center">
-      <svg width="96" height="96" className="-rotate-90">
+      <svg width="100" height="100" className="-rotate-90">
         <circle
-          cx="48"
-          cy="48"
+          cx="50"
+          cy="50"
           r={r}
           fill="none"
-          stroke="rgba(255,255,255,0.07)"
-          strokeWidth="7"
+          stroke="rgba(255, 255, 255, 0.08)"
+          strokeWidth="6"
         />
         <motion.circle
-          cx="48"
-          cy="48"
+          cx="50"
+          cy="50"
           r={r}
           fill="none"
-          stroke="url(#blueGrad)"
-          strokeWidth="7"
+          stroke="url(#purpleGrad)"
+          strokeWidth="6"
           strokeDasharray={circ}
           initial={{ strokeDashoffset: circ }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
           strokeLinecap="round"
         />
         <defs>
-          <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#60a5fa" />
-            <stop offset="100%" stopColor="#2563eb" />
+          <linearGradient id="purpleGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#a855f7" />
+            <stop offset="100%" stopColor="#06b6d4" />
           </linearGradient>
         </defs>
       </svg>
       <div className="absolute text-center">
         <div
-          className="font-display text-xl font-bold"
+          className="font-bold text-2xl tabular-nums"
           style={{
-            color: "#fbbf24",
-            textShadow: "0 0 16px rgba(245,158,11,0.6)",
+            color: "#a855f7",
+            textShadow: "0 0 20px rgba(168, 85, 247, 0.5)",
           }}
         >
           {value}%
         </div>
         <div
-          className="text-[8px] tracking-widest"
-          style={{ color: "#3d5278" }}
+          className="text-[9px] font-semibold tracking-wider mt-0.5"
+          style={{ color: "var(--text-subtle)" }}
         >
           SECURE
         </div>
@@ -235,444 +229,555 @@ function DonutChart({ value = 87 }) {
   );
 }
 
+function StatCard({ icon, label, value, trend }) {
+  return (
+    <motion.div
+      whileHover={{ y: -4, scale: 1.02 }}
+      className="relative rounded-2xl p-6 overflow-hidden group"
+      style={{
+        background: "var(--bg-card)",
+        border: "1px solid var(--border)",
+      }}
+    >
+      {/* Glow accent */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at top right, rgba(168, 85, 247, 0.15), transparent 60%)",
+        }}
+      />
+
+      {/* Top glow line */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.4), transparent)",
+        }}
+      />
+
+      <div className="relative z-10 flex items-start justify-between mb-3">
+        <div
+          className="w-10 h-10 rounded-lg flex items-center justify-center text-lg"
+          style={{
+            background: "rgba(168, 85, 247, 0.12)",
+            color: "#a855f7",
+          }}
+        >
+          {icon}
+        </div>
+        {trend && (
+          <div
+            className="text-xs font-semibold px-2 py-1 rounded-full"
+            style={{
+              color: "#10b981",
+              background: "rgba(16, 185, 129, 0.1)",
+              border: "1px solid rgba(16, 185, 129, 0.2)",
+            }}
+          >
+            {trend}
+          </div>
+        )}
+      </div>
+      <div
+        className="text-sm font-medium"
+        style={{ color: "var(--text-muted)" }}
+      >
+        {label}
+      </div>
+      <div className="text-3xl font-bold mt-2" style={{ color: "var(--text)" }}>
+        {value}
+      </div>
+    </motion.div>
+  );
+}
+
+function VulnBar({ name, count, max, color }) {
+  const percentage = (count / max) * 100;
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between gap-2">
+        <span
+          className="text-sm font-medium"
+          style={{ color: "var(--text-muted)" }}
+        >
+          {name}
+        </span>
+        <span className="text-xs font-bold tabular-nums" style={{ color }}>
+          {count}/{max}
+        </span>
+      </div>
+      <div
+        className="h-2 rounded-full overflow-hidden"
+        style={{ background: "rgba(255, 255, 255, 0.05)" }}
+      >
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${percentage}%` }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          className="h-full rounded-full"
+          style={{
+            background: `linear-gradient(90deg, ${color}, ${color}dd)`,
+            boxShadow: `0 0 12px ${color}60`,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function AgentLog({ agent, msg, time, color }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      className="flex gap-3 p-3 rounded-lg hover:bg-opacity-50 transition-colors"
+      style={{
+        background: "rgba(255, 255, 255, 0.02)",
+      }}
+    >
+      <div className="flex-shrink-0">
+        <div
+          className="w-2 h-2 rounded-full mt-1.5"
+          style={{
+            background: color,
+            boxShadow: `0 0 8px ${color}`,
+          }}
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-0.5">
+          <span className="text-xs font-semibold" style={{ color }}>
+            {agent}
+          </span>
+          <span className="text-xs" style={{ color: "var(--text-subtle)" }}>
+            {time}
+          </span>
+        </div>
+        <p
+          className="text-sm leading-relaxed"
+          style={{ color: "var(--text-muted)" }}
+        >
+          {msg}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
 /* ─── Card wrapper shared style ───────────────────────────── */
 const cardStyle = {
-  background: "#0c1526",
-  border: "1px solid rgba(255,255,255,0.07)",
-  boxShadow: "0 2px 12px rgba(0,0,0,0.35)",
+  background: "var(--bg-card)",
+  border: "1px solid var(--border)",
 };
 
 /* ─── Main Dashboard Page ─────────────────────────────────── */
 export default function DashboardPage() {
   const [selectedFile, setSelectedFile] = useState(null);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
+
   return (
-    <div style={{ background: "#04080f", minHeight: "100vh" }}>
+    <div
+      style={{
+        background: "var(--bg)",
+        minHeight: "100vh",
+      }}
+    >
       <Header />
 
       <div className="flex">
         <Sidebar />
 
-        {/* Main content — offset by sidebar width */}
+        {/* Main content */}
         <motion.main
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex-1 pt-16 min-h-screen"
-          style={{ marginLeft: "256px" }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex-1 pt-20 min-h-screen"
+          style={{ marginLeft: "260px" }}
         >
-          <div className="p-5 lg:p-8 max-w-[1400px]">
+          <div className="p-4 sm:p-6 lg:p-8 max-w-7xl">
             {/* ── Page header ── */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10"
+            >
               <div>
                 <h1
-                  className="font-bold text-xl sm:text-2xl"
-                  style={{ color: "#dce9ff" }}
+                  className="text-3xl sm:text-4xl font-bold tracking-tight"
+                  style={{ color: "var(--text)" }}
                 >
                   Security{" "}
                   <span
                     style={{
-                      color: "#60a5fa",
-                      textShadow: "0 0 20px rgba(96,165,250,0.4)",
+                      background: "linear-gradient(135deg, #a855f7, #06b6d4)",
+                      backgroundClip: "text",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
                     }}
                   >
                     Dashboard
                   </span>
                 </h1>
-                <p className="text-sm mt-1" style={{ color: "#3d5278" }}>
-                  Last scan: 2 minutes ago &nbsp;·&nbsp; Session active
+                <p
+                  className="text-sm mt-2"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Last scan: 2 minutes ago &nbsp;·&nbsp; All systems optimal
                 </p>
               </div>
               <motion.button
                 whileHover={{
-                  scale: 1.03,
-                  boxShadow: "0 6px 24px rgba(37,99,235,0.5)",
+                  scale: 1.05,
+                  boxShadow: "0 12px 32px rgba(168, 85, 247, 0.4)",
                 }}
-                whileTap={{ scale: 0.97 }}
-                className="font-semibold text-sm px-6 py-2.5 rounded-lg text-white self-start sm:self-auto"
+                whileTap={{ scale: 0.95 }}
+                className="font-semibold text-sm px-6 py-3 rounded-xl text-white inline-flex items-center gap-2"
                 style={{
-                  background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-                  boxShadow: "0 0 0 1px rgba(59,130,246,0.3)",
+                  background:
+                    "linear-gradient(135deg, var(--primary), #7e22ce)",
+                  border: "1px solid rgba(168, 85, 247, 0.3)",
+                  boxShadow: "0 4px 16px rgba(168, 85, 247, 0.25)",
                 }}
               >
-                + New Scan
+                <span>+</span> New Scan
               </motion.button>
-            </div>
+            </motion.div>
 
-            {/* ── Stats row ── */}
-            <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-              <AnimatedCard
-                title="Files Scanned"
-                value="247"
-                icon="📁"
-                color="cyan"
-                tag="This Week"
-                index={0}
-              />
-              <AnimatedCard
-                title="Issues Found"
-                value="38"
-                icon="⚠️"
-                color="pink"
-                tag="Total Detected"
-                index={1}
-              />
-              <AnimatedCard
-                title="Critical"
-                value="6"
-                icon="🔴"
-                color="purple"
-                tag="High Priority"
-                index={2}
-              />
-              <AnimatedCard
-                title="Clean Files"
-                value="203"
-                icon="✓"
-                color="green"
-                tag="82.2% Clean"
-                index={3}
-              />
-            </div>
+            {/* ── Stats Grid ── */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+            >
+              <motion.div variants={itemVariants}>
+                <StatCard
+                  icon="📁"
+                  label="Files Scanned"
+                  value="1,247"
+                  trend="↑ 12%"
+                />
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <StatCard
+                  icon="⚠️"
+                  label="Issues Found"
+                  value="47"
+                  trend="↓ 8%"
+                />
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <StatCard icon="🔴" label="Critical" value="8" trend="↓ 3%" />
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <StatCard
+                  icon="✓"
+                  label="Clean Files"
+                  value="1,192"
+                  trend="↑ 15%"
+                />
+              </motion.div>
+            </motion.div>
 
-            {/* ── Charts row ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+            {/* ── Charts Row ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
               {/* Bar chart */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.45 }}
-                className="lg:col-span-2 rounded-xl p-6"
-                style={cardStyle}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                className="lg:col-span-2 rounded-2xl p-6"
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                }}
               >
-                <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center justify-between mb-6">
                   <div>
-                    <div
-                      className="text-xs font-semibold uppercase tracking-wider"
-                      style={{ color: "#3d5278" }}
+                    <h3
+                      className="text-lg font-semibold"
+                      style={{ color: "var(--text)" }}
                     >
-                      Scan Activity
-                    </div>
-                    <div
-                      className="text-xs mt-0.5"
-                      style={{ color: "#2e426a" }}
+                      Weekly Activity
+                    </h3>
+                    <p
+                      className="text-sm mt-1"
+                      style={{ color: "var(--text-muted)" }}
                     >
-                      7-day overview
-                    </div>
+                      Total scans: 382
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-2 rounded-sm"
-                      style={{
-                        background:
-                          "linear-gradient(to top, #2563eb, rgba(59,130,246,0.3))",
-                      }}
-                    />
-                    <span className="text-xs" style={{ color: "#3d5278" }}>
-                      Scans
-                    </span>
+                  <div
+                    className="text-sm font-medium px-3 py-1.5 rounded-lg"
+                    style={{
+                      background: "rgba(168, 85, 247, 0.1)",
+                      color: "#a855f7",
+                      border: "1px solid rgba(168, 85, 247, 0.2)",
+                    }}
+                  >
+                    7D
                   </div>
                 </div>
                 <BarChart data={weeklyData} />
               </motion.div>
 
-              {/* Donut + score breakdown */}
+              {/* Donut chart */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.55 }}
-                className="rounded-xl p-6 flex flex-col"
-                style={cardStyle}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                className="rounded-2xl p-6 flex flex-col items-center justify-center"
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                }}
               >
-                <div
-                  className="text-sm font-semibold mb-4"
-                  style={{ color: "#93c5fd" }}
+                <h3
+                  className="text-lg font-semibold mb-6"
+                  style={{ color: "var(--text)" }}
                 >
                   Security Score
-                </div>
-                <div className="flex flex-col items-center flex-1 justify-center">
-                  <DonutChart value={87} />
-                  <div className="mt-5 w-full space-y-2">
-                    {[
-                      { label: "Critical", count: 6, color: "#f87171" },
-                      { label: "Medium", count: 18, color: "#fbbf24" },
-                      { label: "Low", count: 14, color: "#60a5fa" },
-                    ].map((s) => (
-                      <div
-                        key={s.label}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-1.5 h-1.5 rounded-full"
-                            style={{
-                              background: s.color,
-                              boxShadow: `0 0 4px ${s.color}`,
-                            }}
-                          />
-                          <span
-                            className="text-xs"
-                            style={{ color: "#6882a8" }}
-                          >
-                            {s.label}
-                          </span>
-                        </div>
-                        <span
-                          className="text-xs font-semibold"
-                          style={{ color: s.color }}
-                        >
-                          {s.count}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                </h3>
+                <DonutChart value={87} />
               </motion.div>
             </div>
 
-            {/* ── Vuln breakdown + Recent scans ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-              {/* Vuln breakdown bars */}
+            {/* ── Vulnerability & Logs Row ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              {/* Vulnerability breakdown */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="rounded-xl p-6"
-                style={cardStyle}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                className="lg:col-span-2 rounded-2xl p-6"
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                }}
               >
-                <div
-                  className="font-semibold text-sm mb-5"
-                  style={{ color: "#93c5fd" }}
+                <h3
+                  className="text-lg font-semibold mb-5"
+                  style={{ color: "var(--text)" }}
                 >
-                  Vuln Breakdown
-                </div>
+                  Vulnerability Breakdown
+                </h3>
                 <div className="space-y-4">
-                  {vulnBreakdown.map((v, i) => (
+                  {vulnBreakdown.map((vuln, i) => (
                     <motion.div
-                      key={v.name}
-                      initial={{ opacity: 0, x: -12 }}
+                      key={vuln.name}
+                      initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.7 + i * 0.08 }}
+                      transition={{ delay: i * 0.08 }}
                     >
-                      <div className="flex justify-between mb-1.5">
-                        <span className="text-xs" style={{ color: "#6882a8" }}>
-                          {v.name}
-                        </span>
-                        <span
-                          className="text-xs font-semibold"
-                          style={{ color: v.color }}
-                        >
-                          {v.count}
-                        </span>
-                      </div>
-                      <div
-                        className="h-1.5 rounded-full"
-                        style={{ background: "rgba(255,255,255,0.05)" }}
-                      >
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${(v.count / v.max) * 100}%` }}
-                          transition={{
-                            duration: 1,
-                            delay: 0.8 + i * 0.1,
-                            ease: [0.22, 1, 0.36, 1],
-                          }}
-                          className="h-full rounded-full"
-                          style={{
-                            background: v.color,
-                            boxShadow: `0 0 8px ${v.color}66`,
-                          }}
-                        />
-                      </div>
+                      <VulnBar {...vuln} />
                     </motion.div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* Recent scans table */}
+              {/* Agent logs */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="lg:col-span-2 rounded-xl overflow-hidden"
-                style={cardStyle}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                className="rounded-2xl p-6"
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                }}
               >
-                <div
-                  className="px-6 py-4 flex items-center justify-between"
-                  style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+                <h3
+                  className="text-lg font-semibold mb-4"
+                  style={{ color: "var(--text)" }}
                 >
-                  <div
-                    className="font-semibold text-sm"
-                    style={{ color: "#93c5fd" }}
-                  >
-                    Recent Scans
-                  </div>
-                  <motion.span
-                    whileHover={{ color: "#60a5fa", x: 2 }}
-                    className="text-xs cursor-pointer transition-all"
-                    style={{ color: "#2e426a" }}
-                  >
-                    View all →
-                  </motion.span>
+                  Agent Logs
+                </h3>
+                <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
+                  {agentLogs.map((log, i) => (
+                    <AgentLog key={i} {...log} />
+                  ))}
                 </div>
-                <div>
-                  {recentScans.map((scan, i) => (
-                    <motion.div
-                      key={scan.file}
-                      initial={{ opacity: 0, x: 16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.75 + i * 0.07 }}
-                      whileHover={{
-                        backgroundColor: "rgba(59,130,246,0.05)",
-                        x: 2,
-                      }}
-                      onClick={() =>
-                        setSelectedFile(
-                          selectedFile === scan.file ? null : scan.file,
-                        )
-                      }
-                      className="flex items-center gap-4 px-6 py-3 cursor-pointer transition-all duration-150"
+              </motion.div>
+            </div>
+
+            {/* ── Recent Scans Table ── */}
+            <motion.div
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
+              className="rounded-2xl p-6 overflow-hidden"
+              style={{
+                background: "var(--bg-card)",
+                border: "1px solid var(--border)",
+              }}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3
+                  className="text-lg font-semibold"
+                  style={{ color: "var(--text)" }}
+                >
+                  Recent Scans
+                </h3>
+                <a
+                  href="#"
+                  className="text-sm font-medium hover:opacity-80 transition-opacity"
+                  style={{ color: "#a855f7" }}
+                >
+                  View all →
+                </a>
+              </div>
+
+              {/* Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr
                       style={{
-                        borderBottom:
-                          i < recentScans.length - 1
-                            ? "1px solid rgba(255,255,255,0.04)"
-                            : "none",
-                        background:
-                          selectedFile === scan.file
-                            ? "rgba(59,130,246,0.08)"
-                            : "transparent",
+                        borderBottom: "1px solid var(--border)",
                       }}
                     >
-                      {/* File icon */}
-                      <div
-                        className="w-7 h-7 rounded flex items-center justify-center flex-shrink-0"
+                      <th
+                        className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider"
+                        style={{ color: "var(--text-subtle)" }}
+                      >
+                        File
+                      </th>
+                      <th
+                        className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider"
+                        style={{ color: "var(--text-subtle)" }}
+                      >
+                        Issues
+                      </th>
+                      <th
+                        className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider"
+                        style={{ color: "var(--text-subtle)" }}
+                      >
+                        Severity
+                      </th>
+                      <th
+                        className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider"
+                        style={{ color: "var(--text-subtle)" }}
+                      >
+                        Status
+                      </th>
+                      <th
+                        className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider"
+                        style={{ color: "var(--text-subtle)" }}
+                      >
+                        Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentScans.map((scan, i) => (
+                      <motion.tr
+                        key={scan.file}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        onHoverStart={() => setSelectedFile(scan.file)}
+                        onHoverEnd={() => setSelectedFile(null)}
+                        className="group hover:bg-opacity-50 transition-all duration-200 cursor-pointer"
                         style={{
                           background:
-                            scan.status === "CLEAN"
-                              ? "rgba(16,185,129,0.1)"
-                              : scan.status === "CRITICAL"
-                                ? "rgba(248,113,113,0.1)"
-                                : "rgba(251,191,36,0.1)",
-                          border:
-                            scan.status === "CLEAN"
-                              ? "1px solid rgba(16,185,129,0.25)"
-                              : scan.status === "CRITICAL"
-                                ? "1px solid rgba(248,113,113,0.25)"
-                                : "1px solid rgba(251,191,36,0.25)",
+                            selectedFile === scan.file
+                              ? "rgba(168, 85, 247, 0.06)"
+                              : "transparent",
+                          borderBottom: "1px solid rgba(255, 255, 255, 0.04)",
                         }}
                       >
-                        <span
-                          className="text-xs font-bold"
-                          style={{
-                            color:
-                              scan.status === "CLEAN"
-                                ? "#34d399"
-                                : scan.status === "CRITICAL"
-                                  ? "#f87171"
-                                  : "#fbbf24",
-                          }}
-                        >
-                          {scan.status === "CLEAN"
-                            ? "✓"
-                            : scan.status === "CRITICAL"
-                              ? "!"
-                              : "⚠"}
-                        </span>
-                      </div>
-
-                      {/* File name + time */}
-                      <div className="flex-1 min-w-0">
-                        <div
-                          className="text-sm font-medium truncate"
-                          style={{ color: "#c7d8f0" }}
+                        <td
+                          className="px-4 py-4 text-sm font-medium"
+                          style={{ color: "var(--text)" }}
                         >
                           {scan.file}
-                        </div>
-                        <div
-                          className="text-xs mt-0.5"
-                          style={{ color: "#2e426a" }}
+                        </td>
+                        <td
+                          className="px-4 py-4 text-sm text-center"
+                          style={{ color: "var(--text-muted)" }}
+                        >
+                          {scan.issues}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-center">
+                          <span
+                            className="px-2 py-1 rounded-full text-xs font-semibold"
+                            style={{
+                              color:
+                                scan.severity === "CRITICAL"
+                                  ? "#f43f5e"
+                                  : scan.severity === "HIGH"
+                                    ? "#f97316"
+                                    : scan.severity === "MEDIUM"
+                                      ? "#f59e0b"
+                                      : "#10b981",
+                              background:
+                                scan.severity === "CRITICAL"
+                                  ? "rgba(244, 63, 94, 0.1)"
+                                  : scan.severity === "HIGH"
+                                    ? "rgba(249, 115, 22, 0.1)"
+                                    : scan.severity === "MEDIUM"
+                                      ? "rgba(245, 158, 11, 0.1)"
+                                      : "rgba(16, 185, 129, 0.1)",
+                            }}
+                          >
+                            {scan.severity}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 text-sm text-center">
+                          <StatusBadge status={scan.status} />
+                        </td>
+                        <td
+                          className="px-4 py-4 text-sm text-right"
+                          style={{ color: "var(--text-muted)" }}
                         >
                           {scan.time}
-                        </div>
-                      </div>
-
-                      {/* Status badge */}
-                      <StatusBadge status={scan.status} />
-
-                      {/* Issue count */}
-                      <div className="text-right min-w-[52px]">
-                        <span
-                          className="text-xs font-medium"
-                          style={{
-                            color: scan.issues === 0 ? "#34d399" : "#3d5278",
-                          }}
-                        >
-                          {scan.issues} {scan.issues === 1 ? "issue" : "issues"}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-
-            {/* ── Agent activity log ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.75 }}
-              className="rounded-xl overflow-hidden"
-              style={cardStyle}
-            >
-              <div
-                className="px-6 py-4"
-                style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
-              >
-                <div
-                  className="font-semibold text-sm"
-                  style={{ color: "#93c5fd" }}
-                >
-                  Agent Activity Log
-                </div>
-              </div>
-              <div className="p-4 space-y-2 font-mono text-xs">
-                {agentLogs.map((log, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.85 + i * 0.1 }}
-                    className="flex items-start gap-3 p-3 rounded-lg"
-                    style={{
-                      background: "rgba(255,255,255,0.02)",
-                      border: "1px solid rgba(255,255,255,0.04)",
-                    }}
-                  >
-                    <span
-                      className="text-xs flex-shrink-0 mt-0.5"
-                      style={{ color: "#2e426a" }}
-                    >
-                      {log.time}
-                    </span>
-                    <span
-                      className="text-xs font-semibold flex-shrink-0 mt-0.5"
-                      style={{
-                        color: log.color,
-                        textShadow: `0 0 8px ${log.color}66`,
-                      }}
-                    >
-                      [{log.agent}]
-                    </span>
-                    <span className="text-xs" style={{ color: "#6882a8" }}>
-                      {log.msg}
-                    </span>
-                  </motion.div>
-                ))}
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </motion.div>
           </div>
         </motion.main>
       </div>
+
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(168, 85, 247, 0.3);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(168, 85, 247, 0.5);
+        }
+      `}</style>
     </div>
   );
 }

@@ -3,34 +3,34 @@ import { motion } from "framer-motion";
 
 const colorMap = {
   cyan: {
-    text: "#22d3ee",
-    glow: "rgba(34,211,238,0.15)",
-    border: "rgba(34,211,238,0.2)",
-    badge: { color: "#67e8f9", bg: "rgba(34,211,238,0.12)" },
+    text: "#0ea5e9",
+    glow: "rgba(14,165,233,0.15)",
+    border: "rgba(14,165,233,0.22)",
+    badge: { color: "#38bdf8", bg: "rgba(14,165,233,0.12)" },
   },
   pink: {
-    text: "#fb7185",
-    glow: "rgba(251,113,133,0.14)",
-    border: "rgba(251,113,133,0.22)",
-    badge: { color: "#fecdd3", bg: "rgba(251,113,133,0.12)" },
+    text: "#2563eb",
+    glow: "rgba(37,99,235,0.14)",
+    border: "rgba(37,99,235,0.22)",
+    badge: { color: "#93c5fd", bg: "rgba(37,99,235,0.12)" },
   },
   green: {
-    text: "#34d399",
-    glow: "rgba(16,185,129,0.14)",
-    border: "rgba(16,185,129,0.24)",
-    badge: { color: "#6ee7b7", bg: "rgba(16,185,129,0.14)" },
+    text: "#0284c7",
+    glow: "rgba(2,132,199,0.14)",
+    border: "rgba(2,132,199,0.24)",
+    badge: { color: "#7dd3fc", bg: "rgba(2,132,199,0.14)" },
   },
   purple: {
-    text: "#f59e0b",
-    glow: "rgba(245,158,11,0.18)",
-    border: "rgba(245,158,11,0.24)",
-    badge: { color: "#fde68a", bg: "rgba(245,158,11,0.14)" },
+    text: "#1d4ed8",
+    glow: "rgba(29,78,216,0.18)",
+    border: "rgba(29,78,216,0.24)",
+    badge: { color: "#bfdbfe", bg: "rgba(29,78,216,0.14)" },
   },
   orange: {
-    text: "#f59e0b",
-    glow: "rgba(245,158,11,0.18)",
-    border: "rgba(245,158,11,0.24)",
-    badge: { color: "#fde68a", bg: "rgba(245,158,11,0.14)" },
+    text: "#3b82f6",
+    glow: "rgba(59,130,246,0.18)",
+    border: "rgba(59,130,246,0.24)",
+    badge: { color: "#93c5fd", bg: "rgba(59,130,246,0.14)" },
   },
 };
 
@@ -58,13 +58,13 @@ export default function AnimatedCard({
       }}
       whileHover={{
         y: -4,
-        boxShadow: `0 0 0 1px ${c.border}, 0 16px 40px ${c.glow}, 0 4px 16px rgba(0,0,0,0.3)`,
+        boxShadow: `0 0 0 1px ${c.border}, 0 16px 40px ${c.glow}, 0 4px 16px rgba(15,40,80,0.16)`,
       }}
       className="relative rounded-xl p-5 cursor-pointer overflow-hidden card-glow"
       style={{
         background: "var(--bg-card)",
-        border: "1px solid rgba(255,255,255,0.06)",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+        border: "1px solid var(--border)",
+        boxShadow: "0 4px 14px rgba(15,40,80,0.08)",
         transition: "box-shadow 0.25s ease, transform 0.25s ease",
       }}
     >
@@ -79,7 +79,7 @@ export default function AnimatedCard({
       <div className="flex items-start justify-between mb-3">
         <span
           className="text-[10px] font-semibold uppercase tracking-widest"
-          style={{ color: "#4b5672" }}
+          style={{ color: "var(--text-subtle)" }}
         >
           {title}
         </span>
@@ -102,7 +102,7 @@ export default function AnimatedCard({
       {description && (
         <p
           className="text-sm mt-2 leading-relaxed"
-          style={{ color: "#8b96b3" }}
+          style={{ color: "var(--text-muted)" }}
         >
           {description}
         </p>
