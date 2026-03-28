@@ -758,7 +758,7 @@ export default function DashboardPage() {
               </motion.div>
             </div>
 
-            {/* ── Integrated Agent Overview ── */}
+            {/* ── Agent Types + Workflow ── */}
             <section id="agents-workflow" className="mb-8 scroll-mt-24">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -770,34 +770,37 @@ export default function DashboardPage() {
                   <span
                     className="text-[10px] font-semibold uppercase tracking-[0.18em] px-2.5 py-1 rounded-full"
                     style={{
-                      color: "#dbeafe",
-                      border: "1px solid rgba(96,165,250,0.35)",
-                      background: "rgba(59,130,246,0.16)",
+                      color: "#bfdbfe",
+                      border: "1px solid rgba(59,130,246,0.24)",
+                      background: "rgba(59,130,246,0.1)",
                     }}
                   >
-                    Agent Intelligence
+                    Agent Architecture
                   </span>
                   <span
                     className="text-[10px] font-semibold uppercase tracking-[0.18em] px-2.5 py-1 rounded-full"
                     style={{
-                      color: "#cffafe",
-                      border: "1px solid rgba(34,211,238,0.34)",
-                      background: "rgba(6,182,212,0.14)",
+                      color: "#cdfcff",
+                      border: "1px solid rgba(6,182,212,0.24)",
+                      background: "rgba(6,182,212,0.1)",
                     }}
                   >
-                    White + Blue Theme
+                    Data Pipeline
                   </span>
                 </div>
                 <h3
-                  className="text-xl sm:text-2xl font-semibold"
-                  style={{ color: "#f8fbff" }}
+                  className="text-xl font-semibold"
+                  style={{ color: "var(--text)" }}
                 >
-                  Agent System Integrated Into Core Dashboard
+                  Sentinel Multi-Agent Processing Mechanism
                 </h3>
-                <p className="text-sm mt-2" style={{ color: "#cbd5e1" }}>
-                  Main performance indicators stay here, while deeper
-                  orchestration, controls, and runtime visuals live in the
-                  dedicated Agents page.
+                <p
+                  className="text-sm mt-2"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Live visualization of our autonomous agents interpreting code
+                  patterns, routing logical structures, and synthesizing
+                  security reports.
                 </p>
               </motion.div>
 
@@ -806,54 +809,99 @@ export default function DashboardPage() {
                   variants={itemVariants}
                   initial="hidden"
                   animate="visible"
-                  className="rounded-2xl p-6 xl:col-span-4"
-                  style={{
-                    ...panelStyle,
-                    border: "1px solid rgba(96,165,250,0.24)",
-                    background:
-                      "linear-gradient(165deg, rgba(8,17,34,0.9), rgba(10,14,24,0.95))",
-                  }}
+                  className="rounded-2xl p-6 xl:col-span-5"
+                  style={panelStyle}
                 >
-                  <h4
-                    className="text-base font-semibold mb-4"
-                    style={{ color: "#eff6ff" }}
+                  <div className="flex items-center justify-between mb-5">
+                    <h3
+                      className="text-lg font-semibold"
+                      style={{ color: "var(--text)" }}
+                    >
+                      Agent Types
+                    </h3>
+                    <span
+                      className="text-xs font-semibold px-2 py-1 rounded-full"
+                      style={{
+                        color: "#e9d5ff",
+                        border: "1px solid rgba(168,85,247,0.24)",
+                        background: "rgba(168,85,247,0.12)",
+                      }}
+                    >
+                      Multi-Agent
+                    </span>
+                  </div>
+
+                  <div
+                    className="rounded-xl overflow-hidden"
+                    style={{ border: "1px solid rgba(255,255,255,0.08)" }}
                   >
-                    Active Agent Roles
-                  </h4>
-                  <div className="space-y-3">
+                    <div
+                      className="grid grid-cols-12 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em]"
+                      style={{
+                        color: "var(--text-subtle)",
+                        background: "rgba(255,255,255,0.03)",
+                        borderBottom: "1px solid rgba(255,255,255,0.08)",
+                      }}
+                    >
+                      <span className="col-span-4">Agent</span>
+                      <span className="col-span-3">Type</span>
+                      <span className="col-span-5">Mode</span>
+                    </div>
                     {agentTypes.map((agent, index) => (
                       <motion.div
                         key={agent.name}
-                        initial={{ opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.08 }}
-                        className="rounded-xl px-3 py-2.5"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.08, duration: 0.38 }}
+                        whileHover={{
+                          backgroundColor: "rgba(255,255,255,0.03)",
+                        }}
+                        className="px-3 py-3"
                         style={{
-                          border: "1px solid rgba(148,163,184,0.24)",
-                          background: "rgba(15,23,42,0.52)",
+                          borderBottom:
+                            index < agentTypes.length - 1
+                              ? "1px solid rgba(255,255,255,0.08)"
+                              : "none",
                         }}
                       >
-                        <div className="flex items-center justify-between gap-2">
-                          <span
-                            className="text-sm font-semibold"
-                            style={{ color: "#f8fafc" }}
+                        <div className="grid grid-cols-12 gap-2 items-center">
+                          <div
+                            className="col-span-4 text-sm font-semibold"
+                            style={{ color: "var(--text)" }}
                           >
                             {agent.name}
-                          </span>
-                          <span
-                            className="text-[10px] font-semibold uppercase tracking-wide px-2 py-1 rounded"
-                            style={{
-                              color: "#e0f2fe",
-                              background: "rgba(14,116,144,0.26)",
-                              border: "1px solid rgba(34,211,238,0.3)",
-                            }}
-                          >
-                            {agent.mode}
-                          </span>
+                          </div>
+                          <div className="col-span-3 flex items-center gap-2">
+                            <span
+                              className="w-2 h-2 rounded-full"
+                              style={{
+                                background: agent.color,
+                                boxShadow: `0 0 10px ${agent.color}`,
+                              }}
+                            />
+                            <span
+                              className="text-xs font-semibold"
+                              style={{ color: agent.color }}
+                            >
+                              {agent.type}
+                            </span>
+                          </div>
+                          <div className="col-span-5">
+                            <span
+                              className="text-[10px] font-semibold px-2 py-1 rounded"
+                              style={{
+                                color: "#cbd5e1",
+                                background: "rgba(148,163,184,0.12)",
+                                border: "1px solid rgba(148,163,184,0.2)",
+                              }}
+                            >
+                              {agent.mode}
+                            </span>
+                          </div>
                         </div>
                         <p
-                          className="text-xs mt-1"
-                          style={{ color: "#cbd5e1" }}
+                          className="text-xs leading-relaxed mt-2"
+                          style={{ color: "var(--text-muted)" }}
                         >
                           {agent.description}
                         </p>
@@ -866,152 +914,250 @@ export default function DashboardPage() {
                   variants={itemVariants}
                   initial="hidden"
                   animate="visible"
-                  className="rounded-2xl p-6 xl:col-span-8"
-                  style={{
-                    ...panelStyle,
-                    border: "1px solid rgba(56,189,248,0.24)",
-                    background:
-                      "linear-gradient(165deg, rgba(7,15,28,0.92), rgba(9,18,31,0.95))",
-                  }}
+                  className="rounded-2xl p-6 xl:col-span-7"
+                  style={panelStyle}
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-                    <h4
-                      className="text-base font-semibold"
-                      style={{ color: "#eff6ff" }}
+                  <div className="flex items-center justify-between mb-5">
+                    <h3
+                      className="text-lg font-semibold"
+                      style={{ color: "var(--text)" }}
                     >
-                      Workflow Snapshot
-                    </h4>
-                    <motion.a
-                      href="/agents"
-                      whileHover={{ y: -1, scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                      className="text-xs sm:text-sm font-semibold px-3 py-2 rounded-lg"
+                      Working Mechanism & Synthesis
+                    </h3>
+                    <span
+                      className="text-xs font-medium"
                       style={{
-                        color: "#e0f2fe",
-                        border: "1px solid rgba(34,211,238,0.34)",
-                        background:
-                          "linear-gradient(120deg, rgba(14,116,144,0.35), rgba(59,130,246,0.3))",
+                        color: "var(--text-subtle)",
+                        display: "flex",
+                        gap: "6px",
+                        alignItems: "center",
                       }}
                     >
-                      Open Full Agents Page →
-                    </motion.a>
+                      <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse-neon"></span>{" "}
+                      Live Processing
+                    </span>
                   </div>
 
                   <div
-                    className="relative rounded-xl p-4 sm:p-5 overflow-hidden"
+                    className="relative rounded-xl p-6 overflow-hidden mt-6"
                     style={{
-                      border: "1px solid rgba(148,163,184,0.22)",
-                      background: "rgba(15,23,42,0.5)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      background: "rgba(10,10,14,0.4)",
+                      boxShadow: "inset 0 0 30px rgba(0,0,0,0.5)",
                     }}
                   >
-                    <div className="absolute left-8 right-8 top-[38px] h-[2px] hidden md:block bg-slate-700/60 rounded-full" />
-                    <motion.div
-                      aria-hidden
-                      className="absolute top-[34px] hidden md:block h-[10px] w-16 rounded-full"
+                    {/* Pipeline Animated Connection Line */}
+                    <div
+                      className="absolute left-10 right-10 top-1/2 h-1 -translate-y-1/2 hidden md:block"
                       style={{
-                        background:
-                          "linear-gradient(90deg, transparent, rgba(56,189,248,1), transparent)",
-                        filter: "blur(1px)",
+                        background: "rgba(255,255,255,0.05)",
+                        borderRadius: "2px",
                       }}
-                      animate={{ x: ["2rem", "34rem", "2rem"] }}
-                      transition={{
-                        duration: 4.4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
+                    >
+                      <motion.div
+                        className="h-full rounded-full"
+                        style={{
+                          width: "15%",
+                          filter: "blur(2px)",
+                          background:
+                            "linear-gradient(90deg, transparent, rgba(6,182,212,0.8), rgba(168,85,247,1), transparent)",
+                        }}
+                        animate={{ x: ["-100%", "700%"] }}
+                        transition={{
+                          duration: 2.5,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                      <motion.div
+                        className="h-full rounded-full absolute top-0"
+                        style={{
+                          width: "10%",
+                          filter: "blur(2px)",
+                          background:
+                            "linear-gradient(90deg, transparent, rgba(16,185,129,0.8), rgba(6,182,212,1), transparent)",
+                        }}
+                        animate={{ x: ["-100%", "900%"] }}
+                        transition={{
+                          duration: 3.2,
+                          repeat: Infinity,
+                          ease: "linear",
+                          delay: 1.2,
+                        }}
+                      />
+                    </div>
 
-                    <div className="relative grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="relative grid grid-cols-2 md:grid-cols-4 gap-4 z-10">
                       {workflowStages.map((stage, index) => (
                         <motion.div
                           key={stage.title}
-                          initial={{ opacity: 0, y: 8 }}
+                          initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1, duration: 0.4 }}
-                          className="rounded-xl p-3"
-                          style={{
-                            background: "rgba(15,23,42,0.82)",
-                            border: "1px solid rgba(125,211,252,0.24)",
+                          transition={{
+                            delay: index * 0.15,
+                            duration: 0.5,
+                            type: "spring",
+                            bounce: 0.4,
                           }}
+                          className="relative"
                         >
-                          <div className="flex items-center gap-2">
-                            <span
-                              className="w-2.5 h-2.5 rounded-full"
-                              style={{
-                                background: stage.color,
-                                boxShadow: `0 0 10px ${stage.color}`,
-                              }}
-                            />
-                            <span
-                              className="text-sm font-semibold"
-                              style={{ color: "#f8fafc" }}
+                          <motion.div
+                            className="absolute -top-3 md:top-1/2 md:-translate-y-1/2 left-1/2 md:-left-4 -translate-x-1/2 md:translate-x-0 w-3 h-3 rounded-full border-2 border-[#121214] z-20"
+                            style={{ background: stage.color }}
+                            animate={{
+                              boxShadow: [
+                                `0 0 0 0 ${stage.color}40`,
+                                `0 0 0 6px ${stage.color}00`,
+                              ],
+                            }}
+                            transition={{
+                              duration: 1.5,
+                              repeat: Infinity,
+                              delay: index * 0.2,
+                            }}
+                          />
+
+                          <motion.div
+                            whileHover={{ y: -4, scale: 1.02 }}
+                            className="rounded-xl p-4 min-h-[140px] flex flex-col justify-center relative overflow-hidden backdrop-blur-md"
+                            style={{
+                              background:
+                                "linear-gradient(145deg, rgba(26,26,34,0.7), rgba(18,18,24,0.9))",
+                              border: "1px solid rgba(255,255,255,0.06)",
+                              borderTop: `1px solid ${stage.color}50`,
+                            }}
+                          >
+                            <div
+                              className="absolute -right-6 -top-6 w-16 h-16 rounded-full opacity-10 blur-xl"
+                              style={{ background: stage.color }}
+                            ></div>
+
+                            <div
+                              className="text-sm font-bold tracking-wide"
+                              style={{ color: "var(--text)" }}
                             >
                               {stage.title}
-                            </span>
-                          </div>
-                          <p
-                            className="text-xs mt-1.5 leading-relaxed"
-                            style={{ color: "#cbd5e1" }}
-                          >
-                            {stage.detail}
-                          </p>
+                            </div>
+                            <div
+                              className="text-[11px] mt-2 leading-relaxed opacity-80"
+                              style={{ color: "var(--text-muted)" }}
+                            >
+                              {stage.detail}
+                            </div>
+                          </motion.div>
                         </motion.div>
                       ))}
                     </div>
                   </div>
+                </motion.div>
+              </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                    <div
-                      className="rounded-xl p-3"
-                      style={{
-                        border: "1px solid rgba(34,197,94,0.28)",
-                        background: "rgba(20,83,45,0.25)",
-                      }}
-                    >
-                      <div
-                        className="text-xs font-semibold uppercase tracking-[0.15em] mb-1"
-                        style={{ color: "#bbf7d0" }}
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
+                <motion.div
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="rounded-2xl p-6"
+                  style={panelStyle}
+                >
+                  <h3
+                    className="text-lg font-semibold mb-4"
+                    style={{ color: "var(--text)" }}
+                  >
+                    Agent Security and Reporting Controls
+                  </h3>
+                  <div className="space-y-3">
+                    {securityControls.map((control, index) => (
+                      <motion.div
+                        key={control.title}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.08, duration: 0.35 }}
+                        className="rounded-xl p-3"
+                        style={{
+                          background: "rgba(255,255,255,0.03)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                        }}
                       >
-                        Security Controls
-                      </div>
-                      <ul className="space-y-1">
-                        {securityControls.slice(0, 2).map((control) => (
-                          <li
-                            key={control.title}
-                            className="text-xs"
-                            style={{ color: "#d1fae5" }}
+                        <div className="flex items-center gap-2 mb-1">
+                          <span
+                            className="w-2 h-2 rounded-full"
+                            style={{
+                              background: "#10b981",
+                              boxShadow: "0 0 10px #10b981",
+                            }}
+                          />
+                          <div
+                            className="text-sm font-semibold"
+                            style={{ color: "var(--text)" }}
                           >
-                            • {control.title}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                            {control.title}
+                          </div>
+                        </div>
+                        <p
+                          className="text-xs leading-relaxed"
+                          style={{ color: "var(--text-muted)" }}
+                        >
+                          {control.detail}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
 
-                    <div
-                      className="rounded-xl p-3"
-                      style={{
-                        border: "1px solid rgba(96,165,250,0.28)",
-                        background: "rgba(30,58,138,0.2)",
-                      }}
-                    >
-                      <div
-                        className="text-xs font-semibold uppercase tracking-[0.15em] mb-1"
-                        style={{ color: "#bfdbfe" }}
+                <motion.div
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="rounded-2xl p-6"
+                  style={panelStyle}
+                >
+                  <h3
+                    className="text-lg font-semibold mb-4"
+                    style={{ color: "var(--text)" }}
+                  >
+                    Future Improvements Roadmap
+                  </h3>
+                  <div className="space-y-3">
+                    {futureImprovements.map((item, index) => (
+                      <motion.div
+                        key={item.title}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.08, duration: 0.35 }}
+                        whileHover={{ y: -2 }}
+                        className="rounded-xl p-3"
+                        style={{
+                          background: "rgba(255,255,255,0.03)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                        }}
                       >
-                        Near-Term Roadmap
-                      </div>
-                      <ul className="space-y-1">
-                        {futureImprovements.slice(0, 2).map((item) => (
-                          <li
-                            key={item.title}
-                            className="text-xs"
-                            style={{ color: "#dbeafe" }}
+                        <div className="flex items-center justify-between gap-3 mb-1.5">
+                          <div
+                            className="text-sm font-semibold"
+                            style={{ color: "var(--text)" }}
                           >
-                            • {item.title}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                            {item.title}
+                          </div>
+                          <span
+                            className="text-[10px] font-semibold uppercase tracking-wide px-2 py-1 rounded"
+                            style={{
+                              color: "#c4b5fd",
+                              border: "1px solid rgba(168,85,247,0.26)",
+                              background: "rgba(168,85,247,0.12)",
+                            }}
+                          >
+                            {item.timeline}
+                          </span>
+                        </div>
+                        <p
+                          className="text-xs leading-relaxed"
+                          style={{ color: "var(--text-muted)" }}
+                        >
+                          {item.detail}
+                        </p>
+                      </motion.div>
+                    ))}
                   </div>
                 </motion.div>
               </div>
