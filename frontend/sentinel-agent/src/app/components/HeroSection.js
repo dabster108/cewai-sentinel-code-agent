@@ -103,19 +103,21 @@ export default function HeroSection() {
               Launch Dashboard →
             </motion.button>
           </Link>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className="font-medium text-sm px-8 py-3.5 rounded-xl transition-all duration-150"
-            style={{
-              background: "rgba(255,255,255,0.7)",
-              border: "1px solid var(--border)",
-              color: "var(--text)",
-              boxShadow: "0 4px 12px rgba(15,40,80,0.12)",
-            }}
-          >
-            View Docs
-          </motion.button>
+          <Link href="/docs">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className="font-medium text-sm px-8 py-3.5 rounded-xl transition-all duration-150"
+              style={{
+                background: "rgba(255,255,255,0.7)",
+                border: "1px solid var(--border)",
+                color: "var(--text)",
+                boxShadow: "0 4px 12px rgba(15,40,80,0.12)",
+              }}
+            >
+              View Docs
+            </motion.button>
+          </Link>
         </motion.div>
 
         {/* Stats row */}
