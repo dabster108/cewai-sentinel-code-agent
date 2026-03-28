@@ -1,11 +1,47 @@
 "use client";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import AnimatedCard from "../components/AnimatedCard";
+import { VaporTextShowcase } from "@/components/ui/vapour-text-effect";
+
+const sectionRevealVariants = {
+  hidden: (direction) => ({
+    opacity: 0,
+    x: direction === "down" ? -56 : 56,
+    y: 18,
+    filter: "blur(3px)",
+  }),
+  show: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.58,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const stepRevealVariants = {
+  hidden: (direction) => ({
+    opacity: 0,
+    x: direction === "down" ? -44 : 44,
+    scale: 0.96,
+  }),
+  show: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      duration: 0.45,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
 
 const features = [
   {
@@ -61,6 +97,24 @@ export default function LandingPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [results, setResults] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [scrollDirection, setScrollDirection] = useState("down");
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastY;
+
+      if (Math.abs(delta) > 3) {
+        setScrollDirection(delta > 0 ? "down" : "up");
+        lastY = currentY;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const onFilesChange = (event) => {
     const files = Array.from(event.target.files || []);
@@ -108,18 +162,17 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg)" }}>
-      <Header />
-
       {/* ── Hero ── */}
       <HeroSection />
 
       {/* ── Features ── */}
       <section className="py-28 px-4 sm:px-6 max-w-7xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          custom={scrollDirection}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: false, amount: 0.25 }}
+          variants={sectionRevealVariants}
           className="text-center mb-16"
         >
           <div
@@ -150,8 +203,50 @@ export default function LandingPage() {
               description={f.description}
               tag={f.tag}
               index={i}
+              scrollDirection={scrollDirection}
             />
           ))}
+        </div>
+      </section>
+
+      {/* ── Signal section (middle) ── */}
+      <section className="px-4 sm:px-6 pb-8 md:pb-14">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            custom={scrollDirection}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: false, amount: 0.25 }}
+            variants={sectionRevealVariants}
+            className="text-center mb-10"
+          >
+            <div
+              className="text-xs font-semibold uppercase tracking-widest mb-3"
+              style={{ color: "var(--accent)" }}
+            >
+              Live AI Flow
+            </div>
+            <h2
+              className="font-display text-3xl md:text-4xl"
+              style={{ color: "var(--text)" }}
+            >
+              Signal Through The Noise
+            </h2>
+          </motion.div>
+
+          <div
+            className="relative rounded-2xl border overflow-hidden"
+            style={{
+              borderColor: "var(--border)",
+              background:
+                "radial-gradient(circle at 20% 20%, rgba(168,85,247,0.14) 0%, transparent 45%), radial-gradient(circle at 80% 70%, rgba(6,182,212,0.16) 0%, transparent 45%), var(--bg-surface)",
+              boxShadow: "0 14px 40px rgba(0,0,0,0.35)",
+            }}
+          >
+            <div className="h-[240px] sm:h-[300px] md:h-[360px]">
+              <VaporTextShowcase />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -159,9 +254,11 @@ export default function LandingPage() {
       <section className="py-28 px-4 sm:px-6 cinema-surface">
         <div className="max-w-5xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            custom={scrollDirection}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: false, amount: 0.25 }}
+            variants={sectionRevealVariants}
             className="text-center mb-16"
           >
             <div
@@ -189,9 +286,11 @@ export default function LandingPage() {
                 className="flex-1 flex flex-col md:flex-row items-center gap-4"
               >
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
+                  custom={scrollDirection}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: false, amount: 0.35 }}
+                  variants={stepRevealVariants}
                   transition={{ delay: i * 0.18, duration: 0.45 }}
                   whileHover={{ y: -3 }}
                   className="flex-1 text-center p-8 rounded-xl w-full"
@@ -225,9 +324,11 @@ export default function LandingPage() {
                 </motion.div>
                 {i < howItWorks.length - 1 && (
                   <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
+                    custom={scrollDirection}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: false, amount: 0.35 }}
+                    variants={stepRevealVariants}
                     transition={{ delay: i * 0.18 + 0.3 }}
                     className="hidden md:block text-2xl flex-shrink-0"
                     style={{ color: "var(--text-subtle)" }}
@@ -244,9 +345,11 @@ export default function LandingPage() {
       {/* ── Multi-file upload ── */}
       <section className="py-24 px-4 sm:px-6 max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          custom={scrollDirection}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: false, amount: 0.25 }}
+          variants={sectionRevealVariants}
           className="text-center mb-12"
         >
           <div
@@ -290,9 +393,19 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
-              <label
-                className="text-sm font-semibold px-4 py-2 rounded-lg cursor-pointer text-white"
-                style={{ background: "var(--primary)" }}
+              <motion.label
+                whileHover={{
+                  y: -2,
+                  scale: 1.01,
+                  boxShadow: "0 10px 24px rgba(168,85,247,0.32)",
+                }}
+                whileTap={{ scale: 0.98 }}
+                className="text-sm font-semibold px-4 py-2.5 rounded-xl cursor-pointer text-white"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #a855f7 0%, #7c3aed 54%, #06b6d4 100%)",
+                  border: "1px solid rgba(255,255,255,0.16)",
+                }}
               >
                 Choose files
                 <input
@@ -302,17 +415,22 @@ export default function LandingPage() {
                   className="hidden"
                   onChange={onFilesChange}
                 />
-              </label>
+              </motion.label>
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                whileHover={{
+                  y: -2,
+                  scale: 1.01,
+                  boxShadow: "0 10px 20px rgba(6,182,212,0.18)",
+                }}
                 whileTap={{ scale: 0.97 }}
                 onClick={onUpload}
                 disabled={isUploading}
-                className="text-sm font-semibold px-5 py-2 rounded-lg"
+                className="text-sm font-semibold px-5 py-2.5 rounded-xl"
                 style={{
-                  background: "rgba(29,78,216,0.1)",
-                  border: "1px solid rgba(29,78,216,0.2)",
-                  color: "var(--primary-dark)",
+                  background:
+                    "linear-gradient(180deg, rgba(8,18,34,0.88), rgba(7,11,18,0.92))",
+                  border: "1px solid rgba(125,211,252,0.25)",
+                  color: "#e0f2fe",
                   opacity: isUploading ? 0.7 : 1,
                 }}
               >
@@ -330,12 +448,17 @@ export default function LandingPage() {
           {results.length > 0 && (
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3">
               {results.map((result) => (
-                <div
+                <motion.div
                   key={result.filename}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -3, scale: 1.01 }}
                   className="rounded-lg px-4 py-3"
                   style={{
-                    background: "rgba(29,78,216,0.04)",
-                    border: "1px solid rgba(29,78,216,0.12)",
+                    background:
+                      "linear-gradient(165deg, rgba(10,17,28,0.86), rgba(8,11,20,0.9))",
+                    border: "1px solid rgba(125,211,252,0.14)",
+                    boxShadow: "0 8px 22px rgba(2,8,23,0.26)",
                   }}
                 >
                   <div
@@ -355,7 +478,7 @@ export default function LandingPage() {
                       ? "Scanned successfully"
                       : result.error || "Scan failed"}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -365,9 +488,11 @@ export default function LandingPage() {
       {/* ── Tech stack callout ── */}
       <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          custom={scrollDirection}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: false, amount: 0.25 }}
+          variants={sectionRevealVariants}
           className="text-center mb-12"
         >
           <div
@@ -396,6 +521,7 @@ export default function LandingPage() {
               value={tech.name}
               color={tech.color}
               index={i}
+              scrollDirection={scrollDirection}
             />
           ))}
         </div>
@@ -404,9 +530,11 @@ export default function LandingPage() {
       {/* ── CTA ── */}
       <section className="py-36 px-4 text-center cinema-contrast">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          custom={scrollDirection}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: false, amount: 0.25 }}
+          variants={sectionRevealVariants}
           className="max-w-2xl mx-auto"
         >
           <div
@@ -434,25 +562,35 @@ export default function LandingPage() {
             <Link href="/dashboard">
               <motion.button
                 whileHover={{
+                  y: -3,
                   scale: 1.03,
-                  boxShadow: "0 12px 28px rgba(29,78,216,0.35)",
+                  boxShadow: "0 16px 30px rgba(168,85,247,0.3)",
                 }}
                 whileTap={{ scale: 0.97 }}
                 className="font-semibold text-sm px-10 py-4 rounded-xl text-white"
-                style={{ background: "var(--primary)" }}
+                style={{
+                  background:
+                    "linear-gradient(135deg, #a855f7 0%, #7c3aed 55%, #06b6d4 100%)",
+                  border: "1px solid rgba(255,255,255,0.16)",
+                }}
               >
                 Launch Dashboard →
               </motion.button>
             </Link>
             <motion.button
-              whileHover={{ scale: 1.02 }}
+              whileHover={{
+                y: -2,
+                scale: 1.02,
+                boxShadow: "0 12px 24px rgba(14,165,233,0.14)",
+              }}
               whileTap={{ scale: 0.97 }}
               className="font-medium text-sm px-10 py-4 rounded-xl"
               style={{
-                background: "rgba(255,255,255,0.7)",
-                border: "1px solid var(--border)",
-                color: "var(--text)",
-                boxShadow: "0 6px 18px rgba(15,40,80,0.12)",
+                background:
+                  "linear-gradient(180deg, rgba(9,16,28,0.88), rgba(7,11,18,0.92))",
+                border: "1px solid rgba(125,211,252,0.28)",
+                color: "#e2e8f0",
+                boxShadow: "0 10px 24px rgba(2,8,23,0.32)",
               }}
             >
               View GitHub

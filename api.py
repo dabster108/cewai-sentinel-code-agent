@@ -2,9 +2,9 @@ import sys
 import os
 import secrets
 from dotenv import load_dotenv
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "sentinel_agent", "src"))
 from sentinel_agent.crew import SentinelAgent
-from sentinel_agent.crew import report_agent
 from fastapi import FastAPI, UploadFile, File, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware

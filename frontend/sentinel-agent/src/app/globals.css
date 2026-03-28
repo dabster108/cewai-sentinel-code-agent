@@ -106,9 +106,84 @@ body {
   animation: pulse-neon 2.2s ease-in-out infinite;
 }
 
-/* Blue glow card hover  */
+/* Blue glow card hover */
 .card-glow:hover {
   box-shadow:
     0 0 0 1px rgba(168, 85, 247, 0.25),
     0 10px 36px rgba(168, 85, 247, 0.12);
+}
+
+@keyframes hero-sweep {
+  0% {
+    background-position:
+      0% center,
+      -260% center;
+  }
+  100% {
+    background-position:
+      0% center,
+      260% center;
+  }
+}
+
+.hero-sweep-white {
+  display: inline-block;
+  color: #ffffff;
+  background-color: transparent;
+}
+
+.hero-sweep-primary {
+  display: inline-block;
+  color: #a855f7;
+  background-color: transparent;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-sweep-white {
+    background-image:
+      linear-gradient(90deg, #d6dae2 0%, #d6dae2 100%),
+      linear-gradient(
+        92deg,
+        rgba(255, 255, 255, 0) 44%,
+        rgba(229, 247, 255, 0.75) 48%,
+        rgba(255, 255, 255, 1) 50%,
+        rgba(229, 247, 255, 0.75) 52%,
+        rgba(255, 255, 255, 0) 56%
+      );
+    background-size:
+      100% 100%,
+      260% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: hero-sweep 2.4s linear infinite;
+    text-shadow: none;
+    will-change: background-position;
+  }
+
+  .hero-sweep-primary {
+    background-image:
+      linear-gradient(90deg, #a855f7 0%, #a855f7 100%),
+      linear-gradient(
+        92deg,
+        rgba(255, 255, 255, 0) 44%,
+        rgba(236, 216, 255, 0.8) 48%,
+        rgba(255, 255, 255, 1) 50%,
+        rgba(236, 216, 255, 0.8) 52%,
+        rgba(255, 255, 255, 0) 56%
+      );
+    background-size:
+      100% 100%,
+      260% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: hero-sweep 2.4s linear infinite;
+    text-shadow: none;
+    will-change: background-position;
+  }
 }
