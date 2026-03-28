@@ -66,9 +66,9 @@ export default function HeroSection() {
             color: "var(--text)",
           }}
         >
-          DETECT THE INVISIBLE
+          <span className="hero-sweep-white">DETECT THE INVISIBLE</span>
           <br />
-          <span style={{ color: "var(--primary)" }}>HARDEN EVERY RELEASE</span>
+          <span className="hero-sweep-primary">HARDEN EVERY RELEASE</span>
         </motion.h1>
 
         {/* Subtitle */}

@@ -42,32 +42,60 @@ export default function AnimatedCard({
   description,
   tag,
   index = 0,
+  scrollDirection = "down",
   children,
 }) {
   const c = colorMap[color] || colorMap.cyan;
+  const revealX = scrollDirection === "down" ? -54 : 54;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
+      initial={{ opacity: 0, y: 30, x: revealX, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: false, margin: "-40px" }}
       transition={{
-        duration: 0.5,
+        duration: 0.58,
         delay: index * 0.09,
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{
-        y: -4,
-        boxShadow: `0 0 0 1px ${c.border}, 0 16px 40px ${c.glow}, 0 4px 16px rgba(15,40,80,0.16)`,
+        y: -10,
+        scale: 1.015,
+        boxShadow: `0 0 0 1px ${c.border}, 0 24px 56px ${c.glow}, 0 10px 24px rgba(2,8,23,0.4)`,
       }}
-      className="relative rounded-xl p-5 cursor-pointer overflow-hidden card-glow"
+      className="group relative rounded-2xl p-5 md:p-6 cursor-pointer overflow-hidden card-glow"
       style={{
-        background: "var(--bg-card)",
-        border: "1px solid var(--border)",
-        boxShadow: "0 4px 14px rgba(15,40,80,0.08)",
+        background:
+          "linear-gradient(165deg, rgba(22,22,28,0.94), rgba(12,12,16,0.9))",
+        border: `1px solid ${c.border}`,
+        boxShadow: "0 8px 18px rgba(2,8,23,0.28)",
         transition: "box-shadow 0.25s ease, transform 0.25s ease",
       }}
     >
+      <div
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(circle at 14% 0%, ${c.glow}, transparent 56%)`,
+        }}
+      />
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute -top-4 -bottom-4 left-[-48%] w-[42%]"
+        style={{
+          background:
+            "linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.26) 45%, transparent 100%)",
+          transform: "skewX(-18deg)",
+          opacity: 0.45,
+        }}
+        animate={{ x: ["0%", "430%"] }}
+        transition={{
+          duration: 5.4,
+          repeat: Infinity,
+          ease: "linear",
+          delay: index * 0.22,
+        }}
+      />
+
       {/* Subtle top glow accent */}
       <div
         className="absolute top-0 left-0 right-0 h-px"
@@ -76,7 +104,7 @@ export default function AnimatedCard({
         }}
       />
 
-      <div className="flex items-start justify-between mb-3">
+      <div className="relative z-10 flex items-start justify-between mb-3">
         <span
           className="text-[10px] font-semibold uppercase tracking-widest"
           style={{ color: "var(--text-subtle)" }}
@@ -94,14 +122,17 @@ export default function AnimatedCard({
       </div>
 
       {value && (
-        <div className="font-bold text-3xl mb-1" style={{ color: c.text }}>
+        <div
+          className="relative z-10 font-bold text-3xl mb-1"
+          style={{ color: c.text }}
+        >
           {value}
         </div>
       )}
 
       {description && (
         <p
-          className="text-sm mt-2 leading-relaxed"
+          className="relative z-10 text-sm mt-2 leading-relaxed"
           style={{ color: "var(--text-muted)" }}
         >
           {description}
@@ -110,7 +141,7 @@ export default function AnimatedCard({
 
       {tag && (
         <div
-          className="mt-3 inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full"
+          className="relative z-10 mt-3 inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full"
           style={{ color: c.badge.color, background: c.badge.bg }}
         >
           {tag}
