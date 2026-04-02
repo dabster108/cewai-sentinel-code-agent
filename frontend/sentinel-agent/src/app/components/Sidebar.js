@@ -1,5 +1,6 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
+
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -89,9 +90,9 @@ const Icons = {
 const navItems = [
   { label: "Overview", href: "/dashboard", icon: "overview" },
   { label: "Scans", href: "#", icon: "scans" },
-  { label: "Reports", href: "#", icon: "reports" },
-  { label: "Agents", href: "/agents", icon: "agents" },
-  { label: "Settings", href: "#", icon: "settings" },
+  { label: "Reports", href: "#reports", icon: "reports" },
+  { label: "Agents", href: "/dashboard#agents", icon: "agents" },
+  { label: "Settings", href: "#settings", icon: "settings" },
 ];
 
 const agents = [
@@ -103,15 +104,20 @@ const agents = [
 export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
   const pathname = usePathname();
   const getActiveItem = (path) => {
+    if (path === "/dashboard" || path === "/") {
+      return "Overview";
+    }
     if (path === "/agents") {
       return "Agents";
     }
     return "Overview";
   };
   const [active, setActive] = useState(getActiveItem(pathname));
+
   useEffect(() => {
     setActive(getActiveItem(pathname));
   }, [pathname]);
+
   const sidebarWidth = isOpen ? 256 : 84;
 
   return (
@@ -179,7 +185,6 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
         </div>
       </div>
 
-      {/* System status pill */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -217,7 +222,6 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
         )}
       </motion.div>
 
-      {/* Nav items */}
       <nav
         className={`flex-1 py-2 overflow-y-auto ${isOpen ? "px-3 space-y-0.5" : "px-2 space-y-2"}`}
       >
@@ -242,7 +246,12 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
                   if (item.href.includes("#")) {
                     const [hashPath, id] = item.href.split("#");
                     const isSamePageHash = !hashPath || hashPath === pathname;
-                    if (isSamePageHash && id) {
+                    if (
+                      (isSamePageHash ||
+                        pathname === "/dashboard" ||
+                        pathname === "/") &&
+                      id
+                    ) {
                       const element = document.getElementById(id);
                       if (element) {
                         e.preventDefault();
@@ -288,7 +297,6 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
                       : {}
                   }
                 >
-                  {/* Active left bar */}
                   <AnimatePresence>
                     {isActive && isOpen && (
                       <motion.div
@@ -311,7 +319,6 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
                     )}
                   </AnimatePresence>
 
-                  {/* Icon */}
                   <span
                     className="w-5 h-5 flex items-center justify-center"
                     style={{
@@ -322,7 +329,6 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
                     {Icons[item.icon]}
                   </span>
 
-                  {/* Label */}
                   <AnimatePresence initial={false}>
                     {isOpen && (
                       <motion.span
@@ -342,7 +348,6 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
                     )}
                   </AnimatePresence>
 
-                  {/* Active glow badge */}
                   <AnimatePresence>
                     {isActive && isOpen && (
                       <motion.div
@@ -372,7 +377,6 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Divider */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -381,7 +385,6 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
               style={{ height: "1px", background: "rgba(255,255,255,0.08)" }}
             />
 
-            {/* Agents panel */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -437,7 +440,6 @@ export default function Sidebar({ isOpen = true, onToggle = () => {} }) {
               </div>
             </motion.div>
 
-            {/* User profile strip */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
