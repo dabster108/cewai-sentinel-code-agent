@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
@@ -473,6 +473,7 @@ function ReportsFilters() {
 
 function UploadPanel({ files, onFilesChange, uploadState, onClear }) {
   const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleFiles = (incomingFiles) => {
     const nextFiles = Array.from(incomingFiles || []).slice(0, 5);
@@ -526,6 +527,7 @@ function UploadPanel({ files, onFilesChange, uploadState, onClear }) {
           Or click to select files from your device.
         </div>
         <input
+          ref={fileInputRef}
           type="file"
           multiple
           className="sr-only"
@@ -537,7 +539,7 @@ function UploadPanel({ files, onFilesChange, uploadState, onClear }) {
         <button
           type="button"
           className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/15"
-          onClick={() => document.querySelector('input[type="file"]')?.click()}
+          onClick={() => fileInputRef.current?.click()}
         >
           Select files
         </button>
@@ -917,63 +919,28 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: 0.55, delay: 0.08 }}
-                className="rounded-[32px] p-6 sm:p-7"
-                style={panelStyle}
-              >
+              <div className="rounded-[32px] p-6 sm:p-7" style={panelStyle}>
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
-                      Health
+                      Scan upload
                     </div>
                     <div className="mt-2 text-xl font-semibold tracking-tight text-slate-50">
-                      Monitoring online
+                      Upload files for immediate analysis
                     </div>
                   </div>
-                  <div className="h-12 w-12 rounded-2xl border border-cyan-300/20 bg-cyan-300/10" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-200">
+                    <Upload size={18} strokeWidth={1.9} />
+                  </div>
                 </div>
 
-                <div className="relative mt-6 overflow-hidden rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] px-5 py-5">
-                  <motion.div
-                    aria-hidden
-                    className="absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(56,189,248,0.1),rgba(167,139,250,0.18),transparent)]"
-                    animate={{ x: ["-24%", "130%"] }}
-                    transition={{
-                      duration: 4.8,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
+                <div className="mt-5">
+                  <UploadPanel
+                    files={uploadedFiles}
+                    onFilesChange={handleUploadFiles}
+                    uploadState={uploadState}
+                    onClear={clearUploadedFile}
                   />
-                  <div className="relative flex items-center gap-3 text-sm text-slate-300">
-                    <span className="relative flex h-3 w-3">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300/70 opacity-60" />
-                      <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-300" />
-                    </span>
-                    <span>Scanning repositories now</span>
-                  </div>
-                  <div className="relative mt-5 grid grid-cols-3 gap-3">
-                    {[
-                      ["Files/min", "24"],
-                      ["Queue", "03"],
-                      ["Response", "0.8s"],
-                    ].map(([label, value]) => (
-                      <div
-                        key={label}
-                        className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3"
-                      >
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">
-                          {label}
-                        </div>
-                        <div className="mt-1 text-lg font-semibold tabular-nums text-slate-50">
-                          {value}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
 
                 <div className="mt-5 rounded-[22px] border border-white/8 bg-white/[0.03] p-4">
@@ -995,7 +962,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </motion.section>
 
             <SectionShell
@@ -1004,15 +971,6 @@ export default function DashboardPage() {
               title="Structured analytics and scan history"
               description="Scan history, compact trend cards, and filter controls are organized into a single premium reporting surface."
             >
-              <div className="mb-5">
-                <UploadPanel
-                  files={uploadedFiles}
-                  onFilesChange={handleUploadFiles}
-                  uploadState={uploadState}
-                  onClear={clearUploadedFile}
-                />
-              </div>
-
               <div className="grid gap-4 xl:grid-cols-[1.35fr_0.65fr]">
                 <TrendChart />
                 <div className="space-y-4">
