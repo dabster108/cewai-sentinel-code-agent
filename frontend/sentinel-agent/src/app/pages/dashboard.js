@@ -882,40 +882,134 @@ export default function DashboardPage() {
               className="grid gap-5 lg:grid-cols-[1.35fr_0.65fr]"
             >
               <div
-                className="rounded-[32px] p-6 sm:p-8 lg:p-10"
+                className="rounded-[32px] p-6 sm:p-8 lg:p-10 flex flex-col min-h-[640px]"
                 style={panelStyle}
               >
-                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/15 bg-cyan-400/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-cyan-100">
-                  <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_16px_rgba(34,211,238,0.7)]" />
-                  Real-time security workspace
-                </div>
-                <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight text-slate-50 sm:text-5xl lg:text-[3.45rem]">
-                  Reports, agents, and settings in one calm, premium interface.
-                </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">
-                  Structured content sections keep the dashboard focused:
-                  analytics first, agent orchestration second, and configuration
-                  last. Motion stays subtle and purposeful.
-                </p>
+                <div>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/15 bg-cyan-400/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-cyan-100">
+                    <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_16px_rgba(34,211,238,0.7)]" />
+                    Real-time security workspace
+                  </div>
+                  <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight text-slate-50 sm:text-5xl lg:text-[3.45rem]">
+                    Reports, agents, and settings in one calm, premium
+                    interface.
+                  </h1>
+                  <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">
+                    Structured content sections keep the dashboard focused:
+                    analytics first, agent orchestration second, and
+                    configuration last. Motion stays subtle and purposeful.
+                  </p>
 
-                <div className="mt-7 flex flex-wrap items-center gap-3">
-                  {[
-                    ["Last scan", "2m ago"],
-                    ["Coverage", "98.4%"],
-                    ["Status", "Stable"],
-                  ].map(([label, value]) => (
-                    <div
-                      key={label}
-                      className="rounded-full border border-white/8 bg-white/[0.03] px-4 py-2"
-                    >
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500">
-                        {label}
+                  <div className="mt-7 flex flex-wrap items-center gap-3">
+                    {[
+                      ["Last scan", "2m ago"],
+                      ["Coverage", "98.4%"],
+                      ["Status", "Stable"],
+                    ].map(([label, value]) => (
+                      <div
+                        key={label}
+                        className="rounded-full border border-white/8 bg-white/[0.03] px-4 py-2"
+                      >
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                          {label}
+                        </div>
+                        <div className="mt-0.5 text-sm font-medium text-slate-100">
+                          {value}
+                        </div>
                       </div>
-                      <div className="mt-0.5 text-sm font-medium text-slate-100">
-                        {value}
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-10 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+                  <div className="rounded-[28px] border border-white/8 bg-white/[0.03] p-5">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+                          Scan pulse
+                        </div>
+                        <div className="mt-1 text-lg font-semibold text-slate-50">
+                          Continuous intake is active
+                        </div>
+                      </div>
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-200">
+                        <CircleGauge size={17} strokeWidth={1.9} />
                       </div>
                     </div>
-                  ))}
+
+                    <div className="mt-4 rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-4">
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <LineChart size={14} className="text-cyan-200" />
+                        Live intake chart
+                      </div>
+                      <div className="mt-4 grid grid-cols-4 gap-2">
+                        {[
+                          { label: "Queued", value: "08" },
+                          { label: "Scanning", value: "03" },
+                          { label: "Ready", value: "12" },
+                          { label: "Retry", value: "01" },
+                        ].map((item) => (
+                          <div
+                            key={item.label}
+                            className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3 text-center"
+                          >
+                            <div className="text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                              {item.label}
+                            </div>
+                            <div className="mt-1 text-lg font-semibold text-slate-50">
+                              {item.value}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4 h-2 rounded-full bg-white/[0.06] overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full"
+                          style={{
+                            width: "68%",
+                            background:
+                              "linear-gradient(90deg, #38bdf8, #a78bfa 55%, #34d399)",
+                            boxShadow: "0 0 16px rgba(56,189,248,0.24)",
+                          }}
+                          initial={{ width: 0 }}
+                          whileInView={{ width: "68%" }}
+                          viewport={{ once: false, amount: 0.3 }}
+                          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-[28px] border border-white/8 bg-white/[0.03] p-5">
+                    <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+                      Quick intake
+                    </div>
+                    <div className="mt-3 space-y-2">
+                      {[
+                        ["Last upload", "2 files"],
+                        ["Next scan", "Auto-trigger"],
+                        ["Signal", "Live"],
+                      ].map(([label, value]) => (
+                        <div
+                          key={label}
+                          className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-sm"
+                        >
+                          <span className="text-slate-500">{label}</span>
+                          <span className="text-slate-100">{value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-5 rounded-[22px] border border-cyan-300/15 bg-cyan-300/8 px-4 py-4">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-cyan-100">
+                        Ready for scan
+                      </div>
+                      <p className="mt-2 text-sm leading-6 text-slate-300">
+                        Upload files, then trigger the next analysis cycle
+                        without leaving the dashboard.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
