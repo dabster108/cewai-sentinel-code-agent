@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
   CircleGauge,
+  FileText,
   Layers3,
   LineChart,
   Shield,
   SlidersHorizontal,
   Sparkles,
+  Upload,
   Workflow,
   BellRing,
 } from "lucide-react";
@@ -469,6 +471,122 @@ function ReportsFilters() {
   );
 }
 
+function UploadPanel({ files, onFilesChange, uploadState, onClear }) {
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleFiles = (incomingFiles) => {
+    const nextFiles = Array.from(incomingFiles || []).slice(0, 5);
+    if (nextFiles.length > 0) {
+      onFilesChange(nextFiles);
+    }
+  };
+
+  return (
+    <div className="rounded-[26px] border border-white/8 bg-white/[0.03] p-5">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.26em] text-slate-500">
+            File upload
+          </div>
+          <div className="mt-1 text-lg font-semibold text-slate-50">
+            Upload code or report files for scanning
+          </div>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
+            Drop files here or choose them manually. The dashboard will use them
+            as the next scan input.
+          </p>
+        </div>
+
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-xs font-medium text-slate-300">
+          <Upload size={14} className="text-cyan-200" />
+          Supports .py, .js, .ts, .json
+        </div>
+      </div>
+
+      <label
+        className={`mt-4 flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-[24px] border border-dashed px-5 py-6 text-center transition-all duration-200 ${isDragging ? "border-cyan-300/40 bg-cyan-300/10" : "border-white/10 bg-white/[0.02] hover:border-cyan-300/25 hover:bg-white/[0.04]"}`}
+        onDragOver={(event) => {
+          event.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={(event) => {
+          event.preventDefault();
+          setIsDragging(false);
+          handleFiles(event.dataTransfer.files);
+        }}
+      >
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/8 bg-white/[0.04] text-cyan-200">
+          <Upload size={18} strokeWidth={1.9} />
+        </div>
+        <div className="mt-4 text-sm font-medium text-slate-100">
+          Drag and drop files here
+        </div>
+        <div className="mt-1 text-xs leading-5 text-slate-500">
+          Or click to select files from your device.
+        </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="sr-only"
+          onChange={(event) => handleFiles(event.target.files)}
+        />
+      </label>
+
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/15"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          Select files
+        </button>
+        <div className="text-xs text-slate-500">
+          {uploadState === "uploading"
+            ? "Uploading files..."
+            : uploadState === "done"
+              ? "Files ready for scan"
+              : "Waiting for files"}
+        </div>
+      </div>
+
+      {files.length > 0 && (
+        <div className="mt-4 space-y-2">
+          {files.map((file) => (
+            <div
+              key={file.name}
+              className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-sm"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/8 bg-white/[0.04] text-slate-200">
+                  <FileText size={15} strokeWidth={1.8} />
+                </div>
+                <div className="min-w-0">
+                  <div className="truncate font-medium text-slate-100">
+                    {file.name}
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {Math.max(1, Math.round(file.size / 1024))} KB
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="rounded-full border border-white/8 px-3 py-1 text-xs text-slate-400 transition hover:bg-white/[0.05] hover:text-slate-200"
+                onClick={() => onClear(file.name)}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AgentCard({ agent, isSelected, onSelect, index }) {
   return (
     <motion.button
@@ -691,12 +809,35 @@ export default function DashboardPage() {
   const [weeklyDigest, setWeeklyDigest] = useState(false);
   const [saving, setSaving] = useState(false);
   const [riskLevel, setRiskLevel] = useState("Balanced");
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [uploadState, setUploadState] = useState("idle");
 
   useEffect(() => {
     if (!saving) return undefined;
     const timer = window.setTimeout(() => setSaving(false), 900);
     return () => window.clearTimeout(timer);
   }, [saving]);
+
+  useEffect(() => {
+    if (uploadedFiles.length === 0) {
+      setUploadState("idle");
+      return undefined;
+    }
+
+    setUploadState("uploading");
+    const timer = window.setTimeout(() => setUploadState("done"), 1100);
+    return () => window.clearTimeout(timer);
+  }, [uploadedFiles]);
+
+  const handleUploadFiles = (nextFiles) => {
+    setUploadedFiles(nextFiles);
+  };
+
+  const clearUploadedFile = (fileName) => {
+    setUploadedFiles((current) =>
+      current.filter((file) => file.name !== fileName),
+    );
+  };
 
   const sidebarContentOffset = isSidebarOpen ? "260px" : "92px";
 
@@ -778,63 +919,28 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: 0.55, delay: 0.08 }}
-                className="rounded-[32px] p-6 sm:p-7"
-                style={panelStyle}
-              >
+              <div className="rounded-[32px] p-6 sm:p-7" style={panelStyle}>
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
-                      Health
+                      Scan upload
                     </div>
                     <div className="mt-2 text-xl font-semibold tracking-tight text-slate-50">
-                      Monitoring online
+                      Upload files for immediate analysis
                     </div>
                   </div>
-                  <div className="h-12 w-12 rounded-2xl border border-cyan-300/20 bg-cyan-300/10" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-200">
+                    <Upload size={18} strokeWidth={1.9} />
+                  </div>
                 </div>
 
-                <div className="relative mt-6 overflow-hidden rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] px-5 py-5">
-                  <motion.div
-                    aria-hidden
-                    className="absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(56,189,248,0.1),rgba(167,139,250,0.18),transparent)]"
-                    animate={{ x: ["-24%", "130%"] }}
-                    transition={{
-                      duration: 4.8,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
+                <div className="mt-5">
+                  <UploadPanel
+                    files={uploadedFiles}
+                    onFilesChange={handleUploadFiles}
+                    uploadState={uploadState}
+                    onClear={clearUploadedFile}
                   />
-                  <div className="relative flex items-center gap-3 text-sm text-slate-300">
-                    <span className="relative flex h-3 w-3">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300/70 opacity-60" />
-                      <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-300" />
-                    </span>
-                    <span>Scanning repositories now</span>
-                  </div>
-                  <div className="relative mt-5 grid grid-cols-3 gap-3">
-                    {[
-                      ["Files/min", "24"],
-                      ["Queue", "03"],
-                      ["Response", "0.8s"],
-                    ].map(([label, value]) => (
-                      <div
-                        key={label}
-                        className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3"
-                      >
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">
-                          {label}
-                        </div>
-                        <div className="mt-1 text-lg font-semibold tabular-nums text-slate-50">
-                          {value}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
 
                 <div className="mt-5 rounded-[22px] border border-white/8 bg-white/[0.03] p-4">
@@ -856,7 +962,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </motion.section>
 
             <SectionShell
