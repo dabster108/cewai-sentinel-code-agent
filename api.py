@@ -1,6 +1,8 @@
 import sys
 import os
 import secrets
+import re
+from pathlib import Path
 from dotenv import load_dotenv
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "sentinel_agent", "src"))
@@ -19,6 +21,8 @@ MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", "200000"))
 MAX_FILES = int(os.getenv("MAX_FILES", "10"))
 ALLOWED_CONTENT_TYPES = {"text/x-python", "text/plain", "application/octet-stream"}
 API_KEY = os.getenv("API_KEY")
+FIXED_REPORT_PATH = Path("issues/fixed_files_report.md")
+FIXED_BLOCK_PATTERN = re.compile(r"####\s+([^\n`]+?\.py)\s*```python\n(.*?)```", re.DOTALL)
 
 if not API_KEY:
     print("Warning: API_KEY is not set. Set it in the environment to secure the API.")
@@ -53,6 +57,52 @@ def verify_api_key(x_api_key: str | None):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
+def parse_analysis_output(raw_output: str):
+    try:
+        return json.loads(raw_output)
+    except Exception:
+        return {"text": raw_output}
+
+
+def extract_fixed_code(raw_text: str, requested_filename: str):
+    requested_name = Path(requested_filename).name
+
+    matches = FIXED_BLOCK_PATTERN.findall(raw_text)
+    if not matches:
+        return None, None
+
+    for filename, fixed_code in matches:
+        if Path(filename).name == requested_name:
+            return filename, fixed_code
+
+    filename, fixed_code = matches[0]
+    return filename, fixed_code
+
+
+def analyze_source_code(filename: str, source_code: str) -> dict:
+    result = SentinelAgent().crew().kickoff(inputs={"source_code": source_code})
+    raw_output = getattr(result, "raw", str(result))
+    analysis_json = parse_analysis_output(raw_output)
+
+    report_text = ""
+    if FIXED_REPORT_PATH.exists():
+        report_text = FIXED_REPORT_PATH.read_text()
+
+    fixed_filename, fixed_code = extract_fixed_code(
+        f"{raw_output}\n{report_text}",
+        filename,
+    )
+
+    return {
+        "status": "success",
+        "filename": filename,
+        "analysis": analysis_json,
+        "fixed_filename": fixed_filename,
+        "fixed_code": fixed_code,
+        "fixed_code_available": bool(fixed_code),
+    }
+
+
 @app.post("/scan-file")
 async def scan_file(
     file: UploadFile = File(...),
@@ -80,25 +130,7 @@ async def scan_file(
             )
 
         source_code = source_code.decode("utf-8", errors="replace")
-
- 
-        result = SentinelAgent().crew().kickoff(inputs={"source_code": source_code})
-
-
-     
-        raw_output = getattr(result, "raw", str(result))
-
-     
-        try:
-            analysis_json = json.loads(raw_output)
-        except Exception:
-            analysis_json = {"text": raw_output}
-
-        return {
-            "status": "success",
-            "filename": file.filename,
-            "analysis": analysis_json
-        }
+        return analyze_source_code(file.filename or "unnamed.py", source_code)
 
     except Exception as e:
         return JSONResponse(
@@ -133,20 +165,7 @@ async def analyze_upload(file: UploadFile) -> dict:
             }
 
         source_code = source_code.decode("utf-8", errors="replace")
-
-        result = SentinelAgent().crew().kickoff(inputs={"source_code": source_code})
-        raw_output = getattr(result, "raw", str(result))
-
-        try:
-            analysis_json = json.loads(raw_output)
-        except Exception:
-            analysis_json = {"text": raw_output}
-
-        return {
-            "status": "success",
-            "filename": filename,
-            "analysis": analysis_json,
-        }
+        return analyze_source_code(filename, source_code)
     except Exception as e:
         return {
             "status": "error",

@@ -3,11 +3,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  AlertTriangle,
   ChevronDown,
   CircleGauge,
+  CheckCircle2,
+  Copy,
+  Download,
   FileText,
+  FileCode2,
   Layers3,
   LineChart,
+  Loader2,
+  RefreshCcw,
   Shield,
   SlidersHorizontal,
   Sparkles,
@@ -139,6 +146,34 @@ const panelStyle = {
   boxShadow: "0 30px 80px rgba(0,0,0,0.42)",
   backdropFilter: "blur(20px)",
 };
+
+function formatAnalysisSummary(analysis) {
+  if (!analysis) {
+    return "No analysis was returned for this file.";
+  }
+
+  if (typeof analysis === "string") {
+    return analysis;
+  }
+
+  if (analysis.text) {
+    return analysis.text;
+  }
+
+  return JSON.stringify(analysis, null, 2);
+}
+
+function getDownloadName(result) {
+  if (result?.fixed_filename) {
+    return result.fixed_filename;
+  }
+
+  if (result?.filename?.endsWith(".py")) {
+    return result.filename.replace(/\.py$/i, ".fixed.py");
+  }
+
+  return `${result?.filename || "fixed-file"}.py`;
+}
 
 function SectionShell({
   eyebrow,
@@ -471,12 +506,14 @@ function ReportsFilters() {
   );
 }
 
-function UploadPanel({ files, onFilesChange, uploadState, onClear }) {
+function UploadPanel({ files, onFilesChange, uploadState, onClear, results }) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFiles = (incomingFiles) => {
-    const nextFiles = Array.from(incomingFiles || []).slice(0, 5);
+    const nextFiles = Array.from(incomingFiles || [])
+      .filter((file) => file.name.endsWith(".py"))
+      .slice(0, 10);
     if (nextFiles.length > 0) {
       onFilesChange(nextFiles);
     }
@@ -490,17 +527,17 @@ function UploadPanel({ files, onFilesChange, uploadState, onClear }) {
             File upload
           </div>
           <div className="mt-1 text-lg font-semibold text-slate-50">
-            Upload code or report files for scanning
+            Upload Python files for scanning
           </div>
           <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
             Drop files here or choose them manually. The dashboard will use them
-            as the next scan input.
+            as the next scan input and auto-run analysis.
           </p>
         </div>
 
         <div className="inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/[0.03] px-3 py-2 text-xs font-medium text-slate-300">
           <Upload size={14} className="text-cyan-200" />
-          Supports .py, .js, .ts, .json
+          Supports .py only
         </div>
       </div>
 
@@ -529,6 +566,7 @@ function UploadPanel({ files, onFilesChange, uploadState, onClear }) {
         <input
           ref={fileInputRef}
           type="file"
+          accept=".py"
           multiple
           className="sr-only"
           onChange={(event) => handleFiles(event.target.files)}
@@ -545,10 +583,12 @@ function UploadPanel({ files, onFilesChange, uploadState, onClear }) {
         </button>
         <div className="text-xs text-slate-500">
           {uploadState === "uploading"
-            ? "Uploading files..."
+            ? "Scanning files..."
             : uploadState === "done"
-              ? "Files ready for scan"
-              : "Waiting for files"}
+              ? "Scan complete"
+              : uploadState === "error"
+                ? "Scan failed"
+                : "Waiting for files"}
         </div>
       </div>
 
@@ -581,6 +621,110 @@ function UploadPanel({ files, onFilesChange, uploadState, onClear }) {
               </button>
             </div>
           ))}
+        </div>
+      )}
+
+      {results.length > 0 && (
+        <div className="mt-5 rounded-[22px] border border-white/8 bg-white/[0.03] p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                Scan results
+              </div>
+              <div className="mt-1 text-sm text-slate-300">
+                Auto-run analysis output with fixed code when available.
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            {results.map((result) => (
+              <div
+                key={result.filename}
+                className="rounded-2xl border border-white/8 bg-slate-950/70 p-4"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="text-sm font-semibold text-slate-100">
+                    {result.filename}
+                  </div>
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium"
+                    style={{
+                      color:
+                        result.status === "success" ? "#a7f3d0" : "#fecaca",
+                      borderColor:
+                        result.status === "success"
+                          ? "rgba(52,211,153,0.24)"
+                          : "rgba(248,113,113,0.24)",
+                      background:
+                        result.status === "success"
+                          ? "rgba(16,185,129,0.08)"
+                          : "rgba(239,68,68,0.08)",
+                    }}
+                  >
+                    {result.status === "success" ? (
+                      <CheckCircle2 size={12} />
+                    ) : (
+                      <AlertTriangle size={12} />
+                    )}
+                    {result.status === "success"
+                      ? result.fixed_code_available
+                        ? "Fixed"
+                        : "Scanned"
+                      : result.error || "Scan failed"}
+                  </span>
+                </div>
+
+                <div className="mt-3 rounded-2xl border border-white/8 bg-white/[0.03] p-3">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                    Analysis
+                  </div>
+                  <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-words text-xs leading-6 text-slate-300">
+                    {formatAnalysisSummary(result.analysis)}
+                  </pre>
+                </div>
+
+                {result.fixed_code ? (
+                  <div className="mt-3 rounded-2xl border border-cyan-300/15 bg-cyan-300/6 p-3">
+                    <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-100">
+                      <FileCode2 size={14} />
+                      Fixed code
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => navigator.clipboard.writeText(result.fixed_code)}
+                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-2 text-xs font-medium text-slate-100 transition hover:bg-white/[0.08]"
+                      >
+                        <Copy size={14} />
+                        Copy code
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const blob = new Blob([result.fixed_code], {
+                            type: "text/x-python",
+                          });
+                          const url = window.URL.createObjectURL(blob);
+                          const anchor = document.createElement("a");
+                          anchor.href = url;
+                          anchor.download = getDownloadName(result);
+                          document.body.appendChild(anchor);
+                          anchor.click();
+                          document.body.removeChild(anchor);
+                          window.URL.revokeObjectURL(url);
+                        }}
+                        className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/15"
+                      >
+                        <Download size={14} />
+                        Download file
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -811,6 +955,12 @@ export default function DashboardPage() {
   const [riskLevel, setRiskLevel] = useState("Balanced");
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [uploadState, setUploadState] = useState("idle");
+  const [scanResults, setScanResults] = useState([]);
+  const [scanError, setScanError] = useState("");
+  const apiBase = useMemo(
+    () => process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000",
+    [],
+  );
 
   useEffect(() => {
     if (!saving) return undefined;
@@ -818,25 +968,61 @@ export default function DashboardPage() {
     return () => window.clearTimeout(timer);
   }, [saving]);
 
-  useEffect(() => {
-    if (uploadedFiles.length === 0) {
+  const scanFiles = async (filesToScan) => {
+    if (filesToScan.length === 0) {
       setUploadState("idle");
-      return undefined;
+      setScanResults([]);
+      setScanError("");
+      return;
     }
 
     setUploadState("uploading");
-    const timer = window.setTimeout(() => setUploadState("done"), 1100);
-    return () => window.clearTimeout(timer);
-  }, [uploadedFiles]);
+    setScanError("");
+
+    try {
+      const formData = new FormData();
+      filesToScan.forEach((file) => formData.append("files", file));
+
+      const response = await fetch(`${apiBase}/scan-files`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setUploadState("error");
+        setScanError(data?.message || "Upload failed.");
+        setScanResults([]);
+        return;
+      }
+
+      setScanResults(data?.results || []);
+      setUploadState("done");
+    } catch (error) {
+      setUploadState("error");
+      setScanError("Upload failed. Check your API server.");
+      setScanResults([]);
+    }
+  };
 
   const handleUploadFiles = (nextFiles) => {
     setUploadedFiles(nextFiles);
+    scanFiles(nextFiles);
   };
 
   const clearUploadedFile = (fileName) => {
-    setUploadedFiles((current) =>
-      current.filter((file) => file.name !== fileName),
-    );
+    setUploadedFiles((current) => {
+      const nextFiles = current.filter((file) => file.name !== fileName);
+      if (nextFiles.length === 0) {
+        setUploadState("idle");
+        setScanResults([]);
+        setScanError("");
+      } else {
+        scanFiles(nextFiles);
+      }
+      return nextFiles;
+    });
   };
 
   const sidebarContentOffset = isSidebarOpen ? "260px" : "92px";
