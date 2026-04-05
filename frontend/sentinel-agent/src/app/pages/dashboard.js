@@ -693,7 +693,9 @@ function UploadPanel({ files, onFilesChange, uploadState, onClear, results }) {
                     <div className="mt-2 flex flex-wrap gap-2">
                       <button
                         type="button"
-                        onClick={() => navigator.clipboard.writeText(result.fixed_code)}
+                        onClick={() =>
+                          navigator.clipboard.writeText(result.fixed_code)
+                        }
                         className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-2 text-xs font-medium text-slate-100 transition hover:bg-white/[0.08]"
                       >
                         <Copy size={14} />
