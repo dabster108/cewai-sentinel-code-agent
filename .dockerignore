@@ -1,0 +1,12 @@
+.git
+.gitignore
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+frontend/sentinel-agent/node_modules
+frontend/sentinel-agent/.next
+node_modules

@@ -96,3 +96,35 @@ This project implements a multi-agent "Sentinel" crew that automatically audits 
 
 - Provides a repeatable pipeline to scan, report, fix, and ship secure, high-quality Python code.
 - Integrates directly with GitHub, enabling fully or semi-automated remediation workflows where each run can open or update a branch with auto-generated security fixes.
+
+---
+
+## Docker Run
+
+The project is dockerized with two services:
+
+- `backend`: FastAPI API on port `8000`
+- `frontend`: Next.js app on port `3000`
+
+### Start all services
+
+```bash
+docker compose up --build
+```
+
+### Run in detached mode
+
+```bash
+docker compose up --build -d
+```
+
+### Stop services
+
+```bash
+docker compose down
+```
+
+### Endpoints
+
+- Frontend: `http://localhost:3000`
+- Backend health check: `http://localhost:8000/health-check`
