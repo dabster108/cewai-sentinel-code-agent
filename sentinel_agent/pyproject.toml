@@ -9,6 +9,9 @@ dependencies = [
     "litellm>=1.75.3",
     "python-dotenv>=1.0.0",
     "langfuse>=2.0.0",
+    "apscheduler>=3.10.4",
+    "email-validator>=2.2.0",
+    "fastapi-sso>=0.16.0",
 ]
 
 [project.scripts]

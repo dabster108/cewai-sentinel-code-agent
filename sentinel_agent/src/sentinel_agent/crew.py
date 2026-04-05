@@ -6,7 +6,10 @@ from dotenv import load_dotenv
 from crewai.agents.agent_builder.base_agent import BaseAgent
 
 load_dotenv(override=True)
-MODEL = os.getenv("MODEL", "groq/llama-3.3-70b-versatile")
+
+
+def current_model() -> str:
+    return os.getenv("MODEL", "groq/llama-3.1-8b-instant")
 
 
 
@@ -28,7 +31,7 @@ class SentinelAgent:
         return Agent(
             config=self.agents_config["security_agent"],
             verbose=True,
-            llm=MODEL,
+            llm=current_model(),
         )
 
     @agent
@@ -37,7 +40,7 @@ class SentinelAgent:
             config=self.agents_config["quality_agent"],
             verbose=True,
             TaskEnabled=True,
-            llm=MODEL,
+            llm=current_model(),
         )
 
     @agent
@@ -46,7 +49,7 @@ class SentinelAgent:
             config=self.agents_config["report_agent"],
             verbose=True,
                 TaskEnabled=True,
-            llm=MODEL,
+            llm=current_model(),
         )
 
     @agent
@@ -54,7 +57,7 @@ class SentinelAgent:
         return Agent(
             config=self.agents_config["code_fixer"],
             verbose=True,
-            llm=MODEL,
+            llm=current_model(),
         )
 
     @task
