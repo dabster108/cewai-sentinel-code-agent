@@ -9,7 +9,7 @@ load_dotenv(override=True)
 
 
 def current_model() -> str:
-    return os.getenv("MODEL", "groq/llama-3.1-8b-instant")
+    return os.getenv("MODEL", "groq/llama-3.3-70b-versatile")
 
 
 
@@ -30,7 +30,7 @@ class SentinelAgent:
     def security_agent(self) -> Agent:
         return Agent(
             config=self.agents_config["security_agent"],
-            verbose=True,
+            verbose=False,
             llm=current_model(),
         )
 
@@ -38,7 +38,7 @@ class SentinelAgent:
     def quality_agent(self) -> Agent:
         return Agent(
             config=self.agents_config["quality_agent"],
-            verbose=True,
+            verbose=False,
             TaskEnabled=True,
             llm=current_model(),
         )
@@ -47,7 +47,7 @@ class SentinelAgent:
     def report_agent(self) -> Agent:
         return Agent(
             config=self.agents_config["report_agent"],
-            verbose=True,
+            verbose=False,
                 TaskEnabled=True,
             llm=current_model(),
         )
@@ -56,7 +56,7 @@ class SentinelAgent:
     def code_fixer(self) -> Agent:
         return Agent(
             config=self.agents_config["code_fixer"],
-            verbose=True,
+            verbose=False,
             llm=current_model(),
         )
 
@@ -96,5 +96,5 @@ class SentinelAgent:
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
-            verbose=True,
+            verbose=False,
         )

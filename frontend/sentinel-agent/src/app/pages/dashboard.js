@@ -506,7 +506,13 @@ function ReportsFilters() {
   );
 }
 
-function UploadPanel({ files, onFilesChange, uploadState, onClear, results }) {
+function UploadPanel({
+  files,
+  onFilesChange,
+  uploadState,
+  onClear,
+  results = [],
+}) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -1222,6 +1228,7 @@ export default function DashboardPage() {
                     onFilesChange={handleUploadFiles}
                     uploadState={uploadState}
                     onClear={clearUploadedFile}
+                    results={scanResults}
                   />
                 </div>
 

@@ -23,12 +23,11 @@ MAX_FILES = int(os.getenv("MAX_FILES", "10"))
 API_KEY = os.getenv("API_KEY")
 FIXED_REPORT_PATH = Path("issues/fixed_files_report.md")
 FIXED_BLOCK_PATTERN = re.compile(r"####\s+([^\n`]+?\.py)\s*```python\n(.*?)```", re.DOTALL)
-DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "groq/llama-3.1-8b-instant")
-DEFAULT_MODEL_FALLBACKS = [
-    "groq/llama-3.1-8b-instant",
-    "groq/llama-3.3-70b-versatile",
-]
+DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "groq/llama-3.3-70b-versatile")
 MODEL_RETRY_DELAY_SECONDS = float(os.getenv("MODEL_RETRY_DELAY_SECONDS", "6.5"))
+MODEL_MAX_RETRIES = int(os.getenv("MODEL_MAX_RETRIES", "4"))
+SOURCE_TRIM_MAX_LINES = int(os.getenv("SOURCE_TRIM_MAX_LINES", "320"))
+SOURCE_TRIM_MIN_LINES = int(os.getenv("SOURCE_TRIM_MIN_LINES", "90"))
 
 if not API_KEY:
     print("Warning: API_KEY is not set. Set it in the environment to secure the API.")
@@ -76,19 +75,7 @@ def parse_analysis_output(raw_output: str):
 
 def get_model_candidates() -> list[str]:
     primary_model = os.getenv("MODEL", DEFAULT_MODEL).strip()
-    fallback_models_raw = os.getenv("MODEL_FALLBACKS", "")
-    fallback_models = [model.strip() for model in fallback_models_raw.split(",") if model.strip()]
-    if not fallback_models:
-        fallback_models = DEFAULT_MODEL_FALLBACKS
-
-    seen = set()
-    candidates = []
-    for model in [primary_model, *fallback_models]:
-        if model and model not in seen:
-            seen.add(model)
-            candidates.append(model)
-
-    return candidates or [DEFAULT_MODEL]
+    return [primary_model or DEFAULT_MODEL]
 
 
 def is_rate_limit_error(error: Exception) -> bool:
@@ -98,6 +85,14 @@ def is_rate_limit_error(error: Exception) -> bool:
         or "429" in message
         or "too many requests" in message
     )
+
+
+def get_rate_limit_wait_seconds(error: Exception) -> float:
+    message = str(error)
+    match = re.search(r"try again in\s*([0-9]*\.?[0-9]+)\s*s", message, re.IGNORECASE)
+    if not match:
+        return MODEL_RETRY_DELAY_SECONDS
+    return max(float(match.group(1)) + 0.5, MODEL_RETRY_DELAY_SECONDS)
 
 
 def is_model_unavailable_error(error: Exception) -> bool:
@@ -125,58 +120,97 @@ def extract_fixed_code(raw_text: str, requested_filename: str):
     return None, None
 
 
-def format_source_code(filename: str, source_code: str) -> str:
+def compact_source_for_llm(source_code: str, max_lines: int) -> str:
+    lines = [line.rstrip() for line in source_code.splitlines()]
+
+    compacted_lines = []
+    previous_blank = False
+    for line in lines:
+        is_blank = not line.strip()
+        if is_blank and previous_blank:
+            continue
+        compacted_lines.append(line)
+        previous_blank = is_blank
+
+    if len(compacted_lines) <= max_lines:
+        return "\n".join(compacted_lines)
+
+    head_count = max_lines // 2
+    tail_count = max_lines - head_count
+    head = compacted_lines[:head_count]
+    tail = compacted_lines[-tail_count:]
+    omitted = len(compacted_lines) - max_lines
+
+    marker = [
+        "",
+        f"# ... {omitted} lines omitted to fit model token limits ...",
+        "",
+    ]
+    return "\n".join([*head, *marker, *tail])
+
+
+def format_source_code(filename: str, source_code: str, max_lines: int) -> str:
+    prepared_source = compact_source_for_llm(source_code, max_lines=max_lines)
     return f"""
 FILE: {Path(filename).name}
 PATH: /uploads/{Path(filename).name}
 
 
-{source_code}
+{prepared_source}
 """
 
 
 def analyze_source_code(filename: str, source_code: str) -> dict:
-    formatted_source_code = format_source_code(filename, source_code)
     last_error = None
 
     for model_name in get_model_candidates():
         os.environ["MODEL"] = model_name
-        try:
-            result = SentinelAgent().crew().kickoff(
-                inputs={"source_code": formatted_source_code}
-            )
-            raw_output = getattr(result, "raw", str(result))
-            analysis_json = parse_analysis_output(raw_output)
-
-            report_text = ""
-            if FIXED_REPORT_PATH.exists():
-                report_text = FIXED_REPORT_PATH.read_text()
-
-            fixed_filename, fixed_code = extract_fixed_code(
-                f"{raw_output}\n{report_text}",
+        current_max_lines = SOURCE_TRIM_MAX_LINES
+        for attempt in range(1, MODEL_MAX_RETRIES + 1):
+            formatted_source_code = format_source_code(
                 filename,
+                source_code,
+                max_lines=current_max_lines,
             )
+            try:
+                result = SentinelAgent().crew().kickoff(
+                    inputs={"source_code": formatted_source_code}
+                )
+                raw_output = getattr(result, "raw", str(result))
+                analysis_json = parse_analysis_output(raw_output)
 
-            return {
-                "status": "success",
-                "filename": filename,
-                "analysis": analysis_json,
-                "fixed_filename": fixed_filename,
-                "fixed_code": fixed_code,
-                "fixed_code_available": bool(fixed_code),
-                "model_used": model_name,
-            }
-        except Exception as error:
-            last_error = error
-            if is_rate_limit_error(error):
-                time.sleep(MODEL_RETRY_DELAY_SECONDS)
-                continue
-            if is_model_unavailable_error(error):
-                continue
-            raise
+                report_text = ""
+                if FIXED_REPORT_PATH.exists():
+                    report_text = FIXED_REPORT_PATH.read_text()
+
+                fixed_filename, fixed_code = extract_fixed_code(
+                    f"{raw_output}\n{report_text}",
+                    filename,
+                )
+
+                return {
+                    "status": "success",
+                    "filename": filename,
+                    "analysis": analysis_json,
+                    "fixed_filename": fixed_filename,
+                    "fixed_code": fixed_code,
+                    "fixed_code_available": bool(fixed_code),
+                    "model_used": model_name,
+                }
+            except Exception as error:
+                last_error = error
+                if is_rate_limit_error(error) and attempt < MODEL_MAX_RETRIES:
+                    current_max_lines = max(SOURCE_TRIM_MIN_LINES, current_max_lines // 2)
+                    time.sleep(get_rate_limit_wait_seconds(error))
+                    continue
+                if is_model_unavailable_error(error):
+                    break
+                if is_rate_limit_error(error):
+                    break
+                raise
 
     raise RuntimeError(
-        f"Model retries exhausted. Last error: {last_error}"
+        f"Rate limit/model retries exhausted after {MODEL_MAX_RETRIES} attempts. Last error: {last_error}"
     )
 
 
@@ -204,6 +238,11 @@ async def scan_file(
         return analyze_source_code(file.filename or "unnamed.py", source_code)
 
     except Exception as e:
+        if is_rate_limit_error(e):
+            return JSONResponse(
+                status_code=429,
+                content={"status": "error", "message": str(e)}
+            )
         return JSONResponse(
             status_code=500,
             content={"status": "error", "message": str(e)}
