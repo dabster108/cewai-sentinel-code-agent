@@ -1,104 +1,134 @@
 # Table of Contents
 1. [Executive Summary](#executive-summary)
-2. [Security Vulnerability Report](#security-vulnerability-report)
-3. [Code Quality Review Report](#code-quality-review-report)
-4. [Detailed Findings](#detailed-findings)
-5. [Actionable Recommendations](#actionable-recommendations)
-6. [Overall Code Health Assessment](#overall-code-health-assessment)
+2. [Summary Statistics](#summary-statistics)
+3. [Detailed Findings by File](#detailed-findings-by-file)
+    * [main.py](#mainpy)
+4. [Actionable Recommendations](#actionable-recommendations)
+5. [Overall Code Health Assessment](#overall-code-health-assessment)
 
 ## Executive Summary
-The provided source code, `print(1)`, was analyzed for security vulnerabilities and code quality issues. No issues were detected in either category. This report summarizes the findings and provides recommendations for future code development.
+This report summarizes the security vulnerabilities and code quality issues found in the analyzed Python source code. A total of 10 issues were identified, including hardcoded sensitive data, insecure data loading, lack of input validation, insecure use of the `os` module, lack of error handling, insecure use of the `warnings` module, missing type hints, poor structure, unused imports, and potential performance issues.
 
-## Security Vulnerability Report
-No security vulnerabilities were detected in the provided source code. The code does not interact with user input, databases, files, or external systems, and therefore does not pose any security risks.
+## Summary Statistics
+| Severity Level | Number of Issues |
+| --- | --- |
+| Medium | 6 |
+| Low | 4 |
 
-## Code Quality Review Report
-No code quality issues were detected in the provided source code. The code is a simple Python statement that prints the number 1.
-
-## Detailed Findings
-### File: print_statement.py
-* **Issue category**: None
-* **Priority**: None
-* **Description of the problem**: No issues detected
-* **Affected code snippet**: `print(1)`
-* **Suggested improvement**: No improvements needed
+## Detailed Findings by File
+### main.py
+The `main.py` file contains all 10 identified issues:
+1. **Hardcoded sensitive data**
+	* Vulnerability type: Hardcoded sensitive data
+	* Severity level: Medium
+	* Description: The `OUTPUT_PATH` and `DATASET_PATH` variables contain hardcoded file paths that may contain sensitive information.
+	* Affected code snippet:
+	```python
+OUTPUT_PATH = "/Users/dikshanta/Documents/Analaysis/pca-smot/"
+DATASET_PATH = "/Users/dikshanta/Documents/Analaysis/pca-smot/imbalanced_gender_dataset.csv"
+```
+	* Recommended fix: Use environment variables or a secure configuration file to store sensitive data.
+2. **Insecure data loading**
+	* Vulnerability type: Insecure data loading
+	* Severity level: Medium
+	* Description: The `load_dataset` function loads data from a CSV file using `pd.read_csv` without validating the file's contents or origin.
+	* Affected code snippet:
+	```python
+df = pd.read_csv(file_path)
+```
+	* Recommended fix: Validate the file's contents and origin before loading the data.
+3. **Lack of input validation**
+	* Vulnerability type: Lack of input validation
+	* Severity level: Medium
+	* Description: The `clean_data` function does not validate the input data before processing it.
+	* Affected code snippet:
+	```python
+cleaned = df.copy()
+before_rows = len(cleaned)
+```
+	* Recommended fix: Validate the input data before processing it to prevent potential security issues.
+4. **Insecure use of `os` module**
+	* Vulnerability type: Insecure use of `os` module
+	* Severity level: Low
+	* Description: The `os` module is used to create directories and files without validating the input data.
+	* Affected code snippet:
+	```python
+os.makedirs(OUTPUT_PATH, exist_ok=True)
+```
+	* Recommended fix: Validate the input data before using the `os` module to prevent potential security issues.
+5. **Lack of error handling**
+	* Vulnerability type: Lack of error handling
+	* Severity level: Medium
+	* Description: The code does not handle errors properly, which can lead to security issues.
+	* Affected code snippet:
+	```python
+try:
+    # code
+except Exception as e:
+    print(e)
+```
+	* Recommended fix: Implement proper error handling to prevent security issues.
+6. **Insecure use of `warnings` module**
+	* Vulnerability type: Insecure use of `warnings` module
+	* Severity level: Low
+	* Description: The `warnings` module is used to suppress warnings without validating the input data.
+	* Affected code snippet:
+	```python
+warnings.filterwarnings("ignore")
+```
+	* Recommended fix: Validate the input data before using the `warnings` module to prevent potential security issues.
+7. **Missing type hints**
+	* Issue category: Missing type hints
+	* Priority: Low
+	* Description: The function definitions do not include type hints.
+	* Affected code snippet:
+	```python
+def print_block(title):
+```
+	* Suggested improvement: Add type hints to function definitions.
+8. **Poor structure**
+	* Issue category: Poor structure
+	* Priority: Medium
+	* Description: The code is not well-organized and includes multiple concerns in a single file.
+	* Affected code snippet: None
+	* Suggested improvement: Split the code into multiple files, each with a single responsibility.
+9. **Unused imports**
+	* Issue category: Unused imports
+	* Priority: Low
+	* Description: The code includes unused imports.
+	* Affected code snippet:
+	```python
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from imblearn.over_sampling import SMOTE
+from sklearn.decomposition import PCA
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precision_score
+from sklearn.metrics import recall_score, roc_auc_score, roc_curve
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+```
+	* Suggested improvement: Remove unused imports to declutter the code.
+10. **Performance issues**
+	* Issue category: Performance issues
+	* Priority: Medium
+	* Description: The code may have performance issues due to the use of inefficient algorithms or data structures.
+	* Affected code snippet: None
+	* Suggested improvement: Optimize the code using efficient algorithms and data structures.
 
 ## Actionable Recommendations
-When developing more complex applications, consider the following best practices:
-* Validate all user input to prevent SQL injection and command injection attacks.
-* Use secure protocols for authentication and authorization.
-* Avoid hardcoding secrets and API keys in the source code.
-* Implement secure deserialization mechanisms.
-* Use safe and secure APIs to interact with external systems.
-* Use meaningful variable names and include type hints for function parameters and return types.
-* Organize code into logical modules and packages.
-* Implement secure coding practices, such as input validation and secure authentication mechanisms.
-* Use parameterized queries to prevent SQL injection attacks.
-* Follow standard naming conventions, such as PEP 8 for Python.
-* Write comprehensive unit tests and integration tests to ensure code functionality.
+1. **Use environment variables or a secure configuration file to store sensitive data**.
+2. **Validate the file's contents and origin before loading the data**.
+3. **Validate the input data before processing it to prevent potential security issues**.
+4. **Validate the input data before using the `os` module to prevent potential security issues**.
+5. **Implement proper error handling to prevent security issues**.
+6. **Validate the input data before using the `warnings` module to prevent potential security issues**.
+7. **Add type hints to function definitions**.
+8. **Split the code into multiple files, each with a single responsibility**.
+9. **Remove unused imports to declutter the code**.
+10. **Optimize the code using efficient algorithms and data structures**.
 
 ## Overall Code Health Assessment
-The provided source code is a simple Python statement that does not pose any security risks or code quality issues. However, as the codebase grows and becomes more complex, it is essential to follow best practices and guidelines to ensure the security, maintainability, and readability of the code.
-
-### Example of Secure Coding Practices
-```python
-import os
-import hashlib
-
-# Secure authentication example
-def authenticate(username, password):
-    # Hash the password before storing or comparing it
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    # Compare the hashed password with the stored hash
-    if hashed_password == stored_hash:
-        return True
-    else:
-        return False
-
-# Secure database interaction example
-import sqlite3
-
-def execute_query(query, params):
-    # Use parameterized queries to prevent SQL injection
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-    cursor.execute(query, params)
-    results = cursor.fetchall()
-    conn.close()
-    return results
-```
-
-### Example of Good Coding Practices
-```python
-import os
-import hashlib
-from typing import Tuple
-
-# Secure authentication example
-def authenticate(username: str, password: str) -> bool:
-    # Hash the password before storing or comparing it
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    # Compare the hashed password with the stored hash
-    if hashed_password == stored_hash:
-        return True
-    else:
-        return False
-
-# Secure database interaction example
-import sqlite3
-from sqlite3 import Error
-
-def execute_query(query: str, params: Tuple) -> list:
-    # Use parameterized queries to prevent SQL injection
-    try:
-        conn = sqlite3.connect("database.db")
-        cursor = conn.cursor()
-        cursor.execute(query, params)
-        results = cursor.fetchall()
-        conn.close()
-        return results
-    except Error as e:
-        print(e)
-        return []
-```
-Remember to follow secure coding practices and guidelines, such as those provided by OWASP, to ensure the security of your applications. Additionally, follow standard coding guidelines, such as those provided by PEP 8 for Python, to ensure the maintainability and readability of your applications.
+The analyzed code has several security vulnerabilities and code quality issues that need to be addressed. The most critical issues are hardcoded sensitive data, insecure data loading, lack of input validation, and lack of error handling. By implementing the recommended fixes and improvements, the code can be made more secure, maintainable, and efficient. It is essential to prioritize these issues and address them as soon as possible to ensure the overall health and security of the codebase.
