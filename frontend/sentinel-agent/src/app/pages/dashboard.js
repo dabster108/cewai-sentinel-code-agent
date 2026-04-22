@@ -509,7 +509,9 @@ function ReportsFilters() {
 function UploadPanel({
   files,
   onFilesChange,
+  onScan,
   uploadState,
+  scanError,
   onClear,
   results = [],
 }) {
@@ -536,8 +538,8 @@ function UploadPanel({
             Upload Python files for scanning
           </div>
           <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
-            Drop files here or choose them manually. The dashboard will use them
-            as the next scan input and auto-run analysis.
+            Drop files here or choose them manually, then click Scan files to
+            start backend analysis.
           </p>
         </div>
 
@@ -587,6 +589,19 @@ function UploadPanel({
         >
           Select files
         </button>
+        <button
+          type="button"
+          onClick={onScan}
+          disabled={uploadState === "uploading" || files.length === 0}
+          className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-[linear-gradient(180deg,rgba(8,18,34,0.88),rgba(7,11,18,0.92))] px-4 py-2 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/15 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {uploadState === "uploading" ? (
+            <Loader2 size={13} className="animate-spin" />
+          ) : (
+            <RefreshCcw size={13} />
+          )}
+          {uploadState === "uploading" ? "Scanning..." : "Scan files"}
+        </button>
         <div className="text-xs text-slate-500">
           {uploadState === "uploading"
             ? "Scanning files..."
@@ -594,9 +609,18 @@ function UploadPanel({
               ? "Scan complete"
               : uploadState === "error"
                 ? "Scan failed"
-                : "Waiting for files"}
+                : uploadState === "ready"
+                  ? "Ready to scan"
+                  : "Waiting for files"}
         </div>
       </div>
+
+      {scanError ? (
+        <div className="mt-4 inline-flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/8 px-3 py-2 text-xs text-red-200">
+          <AlertTriangle size={13} />
+          {scanError}
+        </div>
+      ) : null}
 
       {files.length > 0 && (
         <div className="mt-4 space-y-2">
@@ -638,7 +662,7 @@ function UploadPanel({
                 Scan results
               </div>
               <div className="mt-1 text-sm text-slate-300">
-                Auto-run analysis output with fixed code when available.
+                Backend scan output with fixed code when available.
               </div>
             </div>
           </div>
@@ -969,6 +993,7 @@ export default function DashboardPage() {
     () => process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000",
     [],
   );
+  const apiKey = useMemo(() => process.env.NEXT_PUBLIC_API_KEY || "", []);
 
   useEffect(() => {
     if (!saving) return undefined;
@@ -986,21 +1011,26 @@ export default function DashboardPage() {
 
     setUploadState("uploading");
     setScanError("");
+    setScanResults([]);
 
     try {
       const formData = new FormData();
       filesToScan.forEach((file) => formData.append("files", file));
 
+      const headers = apiKey ? { "X-API-Key": apiKey } : undefined;
       const response = await fetch(`${apiBase}/scan-files`, {
         method: "POST",
+        headers,
         body: formData,
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         setUploadState("error");
-        setScanError(data?.message || "Upload failed.");
+        setScanError(
+          data?.message || data?.detail || "Scan failed. Check backend logs.",
+        );
         setScanResults([]);
         return;
       }
@@ -1009,26 +1039,28 @@ export default function DashboardPage() {
       setUploadState("done");
     } catch (error) {
       setUploadState("error");
-      setScanError("Upload failed. Check your API server.");
+      setScanError("Scan failed. Check your API server.");
       setScanResults([]);
     }
   };
 
   const handleUploadFiles = (nextFiles) => {
     setUploadedFiles(nextFiles);
-    scanFiles(nextFiles);
+    setScanResults([]);
+    setScanError("");
+    setUploadState(nextFiles.length > 0 ? "ready" : "idle");
+  };
+
+  const handleScanUploadedFiles = () => {
+    scanFiles(uploadedFiles);
   };
 
   const clearUploadedFile = (fileName) => {
     setUploadedFiles((current) => {
       const nextFiles = current.filter((file) => file.name !== fileName);
-      if (nextFiles.length === 0) {
-        setUploadState("idle");
-        setScanResults([]);
-        setScanError("");
-      } else {
-        scanFiles(nextFiles);
-      }
+      setUploadState(nextFiles.length === 0 ? "idle" : "ready");
+      setScanResults([]);
+      setScanError("");
       return nextFiles;
     });
   };
@@ -1123,7 +1155,7 @@ export default function DashboardPage() {
                           Scan pulse
                         </div>
                         <div className="mt-1 text-lg font-semibold text-slate-50">
-                          Continuous intake is active
+                          Manual scan queue is ready
                         </div>
                       </div>
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-200">
@@ -1181,7 +1213,7 @@ export default function DashboardPage() {
                     <div className="mt-3 space-y-2">
                       {[
                         ["Last upload", "2 files"],
-                        ["Next scan", "Auto-trigger"],
+                        ["Next scan", "Manual trigger"],
                         ["Signal", "Live"],
                       ].map(([label, value]) => (
                         <div
@@ -1226,7 +1258,9 @@ export default function DashboardPage() {
                   <UploadPanel
                     files={uploadedFiles}
                     onFilesChange={handleUploadFiles}
+                    onScan={handleScanUploadedFiles}
                     uploadState={uploadState}
+                    scanError={scanError}
                     onClear={clearUploadedFile}
                     results={scanResults}
                   />
